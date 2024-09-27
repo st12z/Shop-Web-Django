@@ -1,0 +1,75 @@
+<div class="mb-5">
+  <div class="form-check">
+    <input
+      name="price"
+      class="form-check-input"
+      type="radio"
+      id="exampleRadios0"
+      value=""
+      {% if priceOrder == '' %}
+      checked
+      {% endif %}
+    />
+    <label class="form-check-label" for="exampleRadios0"> All </label>
+  </div>
+  <div class="form-check">
+    <input
+      name="price"
+      class="form-check-input"
+      type="radio"
+      id="exampleRadios1"
+      value="<6"
+      {% if priceOrder == '<6' %}
+      checked
+      {% endif %}
+    />
+    <label class="form-check-label" for="exampleRadios1">
+      Dưới 6 triệu đồng
+    </label>
+  </div>
+  <div class="form-check">
+    <input
+      name="price"
+      class="form-check-input"
+      type="radio"
+      id="exampleRadios2"
+      value="6-10"
+      {% if priceOrder == '6-10' %}
+      checked
+      {% endif %}
+    />
+    <label class="form-check-label" for="exampleRadios2">
+      Từ 6 đến 10 triệu đồng
+    </label>
+  </div>
+  <div class="form-check">
+    <input
+      name="price"
+      class="form-check-input"
+      type="radio"
+      id="exampleRadios3"
+      value="11-15"
+      {% if priceOrder == '11-15' %}
+      checked
+      {% endif %}
+    />
+    <label class="form-check-label" for="exampleRadios3">
+      Từ 11 đến 15 triệu đồng
+    </label>
+  </div>
+  <div class="form-check">
+    <input
+      name="price"
+      class="form-check-input"
+      type="radio"
+      id="exampleRadios4"
+      value=">15"
+      {% if priceOrder == '>15' %}
+      checked
+      {% endif %}
+    />
+    <label class="form-check-label" for="exampleRadios4">
+      Trên 15 triệu đồng
+    </label>
+  </div>
+</div>

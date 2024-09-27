@@ -1,0 +1,74 @@
+{%extends 'main.html'%} {%load static%} {%block content%}
+
+<div class="container">
+  <h1>Trang thanh toán</h1>
+  {% if products %}
+  <div class="row">
+    <table class="table-cart">
+      <thead>
+        <th>STT</th>
+        <th>Tên sản phẩm</th>
+        <th>Ảnh</th>
+        <th>Giá cũ</th>
+        <th>Giảm giá</th>
+        <th>Giá mới</th>
+        <th>Số lượng</th>
+        <th>Tổng tiền</th>
+      </thead>
+      <tbody>
+        {%for item in products%}
+        <tr>
+          <td>1</td>
+          <td>{{item.product.name}}</td>
+          <td>
+            <img src="{% static item.product.thumbnail%}" alt="Ảnh" />
+          </td>
+          <td>{{item.product.price}} VNĐ</td>
+          <td>{{item.product.discountPercentage}}%</td>
+          <td>{{item.product.priceNew}} VNĐ</td>
+          <td>{{item.quantity}}</td>
+          <td>{{item.totalPrice}} VNĐ</td>
+        </tr>
+        {%endfor%}
+      </tbody>
+    </table>
+  </div>
+  <h2>
+    Tổng tiền thanh toán: <span style="color: red">{{totalPayment}} VNĐ</span>
+  </h2>
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+    Thanh toán
+  </button>
+  {%else%}
+  <h1>Giỏ hàng trống</h1>
+  {%endif%}
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Thông tin người mua</h5>
+      </div>
+      <div class="modal-body">
+        <form  method="POST" action="">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="name">Họ tên</label>
+            <input type="text" class="form-control" id="name" name="name"/>
+          </div>
+          <div class="form-group">
+            <label for="phone">Số điện thoại</label>
+            <input type="text" class="form-control" id="phone" name="phone"/>
+          </div>
+          <div class="form-group">
+            <label for="address">Địa chỉ</label>
+            <input type="text" class="form-control" id="address" name="address"/>
+          </div>
+          <button type="submit" class="btn btn-primary">Thanh toán</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

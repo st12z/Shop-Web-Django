@@ -1,0 +1,10 @@
+<select class="select-order mb-5" select-sort>
+  <option value="All" {% if sortOrder == 'All' %}selected{% endif %}>All</option>
+  <option value="name-asc" {% if sortOrder == 'name-asc' %}selected{% endif %}>Sắp xếp theo tên A-Z</option>
+  <option value="name-desc" {% if sortOrder == 'name-desc' %}selected{% endif %}>Sắp xếp theo tên Z-A</option>
+  <option value="price-asc" {% if sortOrder == 'price-asc' %}selected{% endif %}>Sắp xếp giá tăng dần</option>
+  <option value="price-desc" {% if sortOrder == 'price-desc' %}selected{% endif %}>Sắp xếp giá giảm dần</option>
+  <option value="discountPercentage-asc" {% if sortOrder == 'discountPercentage-asc' %}selected{% endif %}>Sắp xếp % giảm giá tăng dần</option>
+  <option value="discountPercentage-desc" {% if sortOrder == 'discountPercentage-desc' %}selected{% endif %}>Sắp xếp % giảm giá giảm dần</option>
+
+</select>

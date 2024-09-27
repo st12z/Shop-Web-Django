@@ -1,0 +1,20 @@
+<nav aria-label="...">
+  <ul class="pagination">
+    {% if currentPage|add:"-1" >= firstPage %}
+    <li class="page-item">
+      <a class="page-link" data-page={{ currentPage|add:"-1"}} href="#">Previous</a>
+    </li>
+    {%endif%}
+    {%for i in countPage%}
+    <li class="{% if i == currentPage %}page-item active{% else %}page-item{% endif %}" >
+      <a class="page-link" data-page={{i}} href="#">{{ i }}</a>
+    </li>
+    {%endfor%}
+    {% if currentPage|add:"1" <= lastPage %}
+    
+    <li class="page-item">
+      <a class="page-link" data-page="{{ currentPage|add:"1" }}" href="#">Next</a>
+    </li>
+    {%endif%}
+  </ul>
+</nav>
