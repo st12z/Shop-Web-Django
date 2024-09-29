@@ -60,7 +60,11 @@ def loginPage(request):
             user = authenticate(request, email=email, password=password)
             if user is not None:
                 cartUser,created=CartUser.objects.get_or_create(user=user)
-                cartId=cartUser.cart_id
+                if  created:
+                    cartUser.cart_id=cartId
+                    cartUser.save()
+                else:
+                    cartId=cartUser.cart_id
                 response=redirect("home")
                 response.set_cookie('cartId', cartId, max_age=7 *
                         24*60*60)  # Thiết lập cookie
