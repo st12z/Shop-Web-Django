@@ -1,25 +1,102 @@
 from django.shortcuts import render, redirect
-from .models import Product, Category, Cart, CartItem, Order, OrderItem
+from django.contrib.auth.decorators import login_required
+
+from .models import Product, Category, Cart,CartUser, CartItem, Order, OrderItem, User
+from django.contrib import messages
 from helper.getProductPage import getProductPage
 from helper.generateString import generateString
 from helper.getProductCart import getProductCart
 from helper.getOrder import getOrder
+from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
 from django.http import HttpResponse
 import locale
 # Create your views here.
 
 
-def home(request):
-    # Lấy cookies từ request
-    cookies = request.COOKIES
-    cartId = cookies.get("cartId")
-
-    # Nếu không có cartId, tạo một giá trị mới và thiết lập cookie
+def registerPage(request):
+    cartId=request.COOKIES.get("cartId")
     if not cartId:
-        cartId = generateString(10)
-    cart, created = Cart.objects.get_or_create(
-        user=request.user, cart_id=cartId)
+        cartId=generateString(10)
+    quantityProducts = getProductCart(cartId)
+    if request.method == "POST":
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        # Kiểm tra xem username có rỗng không
+        if not username:
+            messages.error(request, 'Tên đăng nhập không được để trống!')
+        # Kiểm tra nếu email đã tồn tại
+        elif User.objects.filter(email=email).exists():
+            messages.error(request, 'Email đã tồn tại!')
+        else:
+            user = User(username=username, email=email)
+            user.set_password(password)  # Mã hóa mật khẩu
+            user.save()  # Lưu tài khoản mới
+            messages.success(request, "Đăng kí thành công!")
+            # Chuyển hướng đến trang đăng nhập sau khi đăng ký thành công
+            return redirect('login')
+    context={'quantityProducts':quantityProducts}
+    return render(request, 'base/registerPage.html',context)
+
+
+def loginPage(request):
+    cartId=request.COOKIES.get("cartId")
+    quantityProducts=0
+    if not cartId:
+        cartId=generateString(10)
+    else:
+        quantityProducts = getProductCart(cartId)
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        # Kiểm tra xem email có tồn tại không
+        user = User.objects.filter(email=email).first()
+        if user is None:
+            messages.error(request, 'Email không tồn tại!')
+        else:
+            user = authenticate(request, email=email, password=password)
+            if user is not None:
+                cartUser,created=CartUser.objects.get_or_create(user=user)
+                cartId=cartUser.cart_id
+                response=redirect("home")
+                response.set_cookie('cartId', cartId, max_age=7 *
+                        24*60*60)  # Thiết lập cookie
+                login(request, user)
+                return response
+            else:
+                messages.error(request, 'Sai mật khẩu!')
+    context={'quantityProducts':quantityProducts}
+    
+    response = render(request, 'base/loginPage.html', context)
+    response.set_cookie('cartId', cartId, max_age=7 *
+                        24*60*60)  # Thiết lập cookie
+    return response
+
+def logoutUser(request):
+    
+    # Tạo phản hồi redirect tới trang đăng nhập
+    response = redirect("login")
+    response.delete_cookie("cartId")
+    # Đăng xuất người dùng
+    logout(request)
+
+    # Thiết lập lại cookie carId với giá trị rỗng và thời gian hết hạn
+    response.set_cookie('carId', '', expires='Thu, 01 Jan 1970 00:00:00 GMT', path='/')
+
+    return response
+
+
+
+
+def home(request):
+
+    cartId=request.COOKIES.get("cartId")
+    if not cartId:
+        cartId=generateString(10)
+    cart,created=Cart.objects.get_or_create(cart_id=cartId)
     # Các biến GET
     keyword = request.GET.get('keyword', '')
     currentPage = request.GET.get('page', '1')  # Giá trị mặc định là 1
@@ -28,8 +105,10 @@ def home(request):
     sort_order = '' if sortValue == 'asc' else '-'
     priceOrder = request.GET.get('priceOrder', '')
 
-    quantityProducts = getProductCart(request)
-    quantityOrder = getOrder(request)
+    quantityProducts = getProductCart(cartId)
+    quantityOrder=0
+    if request.user.is_authenticated:
+        quantityOrder = getOrder(cartId)
     # Xử lý giá cả
     if priceOrder:
         if priceOrder == '<6':
@@ -89,12 +168,14 @@ def home(request):
     response = render(request, 'base/home.html', context)
     response.set_cookie('cartId', cartId, max_age=7 *
                         24*60*60)  # Thiết lập cookie
+    
     return response
 
-
 def detailProduct(request, pk):
-    quantityOrder = getOrder(request)
-    quantityProducts = getProductCart(request)
+    cookies = request.COOKIES
+    cartId = cookies.get("cartId")
+    quantityOrder=getOrder(cartId)
+    quantityProducts = getProductCart(cartId)
     product = Product.objects.get(id=pk)
     priceNew = int(product.price*(100-product.discountPercentage)/100)
     product.price = "{:,.0f}".format(int(product.price)).replace(',', '.')
@@ -119,34 +200,42 @@ def buyProduct(request, pk):
 
 
 def detailCart(request):
-    quantityOrder = getOrder(request)
-    quantityProducts = getProductCart(request)
+    cookies = request.COOKIES
+    cartId = cookies.get("cartId")
+    if request.user.is_authenticated:
+        quantityOrder=getOrder(cartId)
+    else:
+        quantityOrder=0
+    quantityProducts = getProductCart(cartId)
     cart_id = request.COOKIES.get('cartId')
-    cart = Cart.objects.get(cart_id=cart_id)
-    cart_items = CartItem.objects.filter(cart=cart)
-    products = []
-    totalPayment = 0
-    for item in cart_items:
-        priceNew = int(item.product.price *
-                       (100-item.product.discountPercentage)/100)
-        totalPrice = priceNew*item.quantity
-        objectProducts = {
-            'product': item.product,
-            'quantity': item.quantity,
-            'totalPrice': totalPrice,
-            'quantityOrders': quantityOrder
+    try:
+        cart = Cart.objects.get(cart_id=cart_id)
+        cart_items = CartItem.objects.filter(cart=cart)
+        products = []
+        totalPayment = 0
+        for item in cart_items:
+            priceNew = int(item.product.price *
+                        (100-item.product.discountPercentage)/100)
+            totalPrice = priceNew*item.quantity
+            objectProducts = {
+                'product': item.product,
+                'quantity': item.quantity,
+                'totalPrice': totalPrice,
 
-        }
-        objectProducts['product'].price = "{:,.0f}".format(
-            objectProducts['product'].price)
-        objectProducts['product'].priceNew = "{:,.0f}".format(priceNew)
-        totalPayment += objectProducts['totalPrice']
-        objectProducts['totalPrice'] = "{:,.0f}".format(
-            objectProducts['totalPrice'])
-        products.append(objectProducts)
-    totalPayment = "{:,.0f}".format(totalPayment)
-    context = {'products': products, 'totalPayment': totalPayment,
-               'quantityProducts': quantityProducts, 'quantityOrders': quantityOrder}
+            }
+            objectProducts['product'].price = "{:,.0f}".format(
+                objectProducts['product'].price)
+            objectProducts['product'].priceNew = "{:,.0f}".format(priceNew)
+            totalPayment += objectProducts['totalPrice']
+            objectProducts['totalPrice'] = "{:,.0f}".format(
+                objectProducts['totalPrice'])
+            products.append(objectProducts)
+        totalPayment = "{:,.0f}".format(totalPayment)
+        context = {'products': products, 'totalPayment': totalPayment,
+                'quantityProducts': quantityProducts, 'quantityOrders': quantityOrder}
+    except:
+        notification="Giỏ hàng trống!"
+        context={'notification':notification}
     return render(request, 'base/detail-cart.html', context)
 
 
@@ -186,8 +275,10 @@ def deleteCart(request, pk):
 
 
 def checkOut(request):
-    quantityOrder = getOrder(request)
-    quantityProducts = getProductCart(request)
+    cookies = request.COOKIES
+    cartId = cookies.get("cartId")
+    quantityOrder=getOrder(cartId)
+    quantityProducts = getProductCart(cartId)
     cart_id = request.COOKIES.get('cartId')
     cart = Cart.objects.get(cart_id=cart_id)
     cart_items = CartItem.objects.filter(cart=cart)
@@ -215,6 +306,8 @@ def checkOut(request):
     context = {'products': products, 'totalPayment': totalPayment,
                'quantityProducts': quantityProducts, 'quantityOrders': quantityOrder}
     if request.method == "POST":
+        if not request.user.is_authenticated:
+            return redirect('login')
         cart_id = request.COOKIES.get('cartId')
         cart = Cart.objects.get(cart_id=cart_id)
         orderObject = Order.objects.create(
@@ -234,49 +327,53 @@ def checkOut(request):
         return redirect("check-out")
     return render(request, 'base/check-out.html', context)
 
-
 def detailOrder(request):
-    quantityOrder = getOrder(request)
-    cart_id = request.COOKIES.get('cartId')
-    quantityProducts = getProductCart(request)
-    cart = Cart.objects.get(cart_id=cart_id)
-    orders = Order.objects.filter(cart=cart)
-    infoOrders = []
-    for order in orders:
-        infoItem = []
-        infoObject = {
-            'name': order.name,
-            'phone': order.phone,
-            'address': order.address,
-        }
-        orderItems = OrderItem.objects.filter(order=order)
-        totalPayment = 0
-        for item in orderItems:
-            priceNew = int(item.product.price *
-                           (100-item.product.discountPercentage)/100)
-            totalPrice = priceNew*item.quantity
-            objectProducts = {
-                'product': item.product,
-                'quantity': item.quantity,
-                'totalPrice': totalPrice,
-
+    cookies = request.COOKIES
+    cartId = cookies.get("cartId")
+    quantityProducts = getProductCart(cartId)
+    if request.user.is_authenticated:
+        quantityOrder=getOrder(cartId)
+        cart = Cart.objects.get(cart_id=cartId)
+        orders = Order.objects.filter(cart=cart)
+        infoOrders = []
+        for order in orders:
+            infoItem = []
+            infoObject = {
+                'name': order.name,
+                'phone': order.phone,
+                'address': order.address,
             }
-            objectProducts['product'].price = "{:,.0f}".format(
-                objectProducts['product'].price)
-            objectProducts['product'].priceNew = "{:,.0f}".format(priceNew)
-            totalPayment += objectProducts['totalPrice']
-            objectProducts['totalPrice'] = "{:,.0f}".format(
-                objectProducts['totalPrice'])
-            infoItem.append(objectProducts)
-        totalPayment = "{:,.0f}".format(totalPayment)
-        infoOrder = {
-            'infoCustomer': infoObject,
-            'infoItems': infoItem,
-            'totalPayment': totalPayment
-        }
-        infoOrders.append(infoOrder)
-    context = {
-        'quantityProducts': quantityProducts,
-        'infoOrders': infoOrders,
-        'quantityOrders': quantityOrder}
+            orderItems = OrderItem.objects.filter(order=order)
+            totalPayment = 0
+            for item in orderItems:
+                priceNew = int(item.product.price *
+                            (100-item.product.discountPercentage)/100)
+                totalPrice = priceNew*item.quantity
+                objectProducts = {
+                    'product': item.product,
+                    'quantity': item.quantity,
+                    'totalPrice': totalPrice,
+
+                }
+                objectProducts['product'].price = "{:,.0f}".format(
+                    objectProducts['product'].price)
+                objectProducts['product'].priceNew = "{:,.0f}".format(priceNew)
+                totalPayment += objectProducts['totalPrice']
+                objectProducts['totalPrice'] = "{:,.0f}".format(
+                    objectProducts['totalPrice'])
+                infoItem.append(objectProducts)
+            totalPayment = "{:,.0f}".format(totalPayment)
+            infoOrder = {
+                'infoCustomer': infoObject,
+                'infoItems': infoItem,
+                'totalPayment': totalPayment
+            }
+            infoOrders.append(infoOrder)
+        context = {
+            'quantityProducts': quantityProducts,
+            'infoOrders': infoOrders,
+            'quantityOrders': quantityOrder}
+    else:
+        notification="Giỏ hàng trống!"
+        context={'notification':notification,'quantityProducts':quantityProducts}
     return render(request, 'base/detail-order.html', context)

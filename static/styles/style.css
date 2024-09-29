@@ -54,3 +54,7 @@ table tr {
   justify-content: center;
   align-items: center;
 }
+.inner-register{
+  display: flex;
+  justify-content: center;
+}

@@ -8,7 +8,7 @@
         </div>
       </a>
     </div>
-    <div class="col-5">
+    <div class="col-4">
       <form class="form-search1">
         <div class="input-group rounded">
           <input default=""  type="search" name="keyword" class="form-control rounded" placeholder="Search" value="{{keyword}}" aria-label="Search" aria-describedby="search-addon" />
@@ -18,14 +18,41 @@
         </div>
       </form>
     </div>
-    <div class="col-2">
+    <div class="col-1">
       <a href="{%url 'detail-cart'%}">
-        <i class="fa-solid fa-cart-shopping"></i>({{quantityProducts}})
-      </a>
-      <a href="{%url 'detail-order'%}">
-        <i class="fa-solid fa-truck"></i>({{quantityOrders}})
+        <i class="fa-solid fa-cart-shopping"></i>
+        {%if quantityProducts%}
+        ({{quantityProducts}})
+        {%endif%}
       </a>
     </div>
+    <div class="col-1">
+      <a href="{%url 'detail-order'%}">
+        <i class="fa-solid fa-truck"></i>
+        {%if quantityOrders%}
+        ({{quantityOrders}})
+        {%endif%}
+      </a>
+    </div>
+    
+    {% if request.user.is_authenticated %}
+      <div class="col-1">
+        <a href="{%url 'logout'%}">
+          Đăng xuất
+        </a>
+      </div>
+    {%else%}
+    <div class="col-1">
+      <a href="{%url 'login'%}">
+        Đăng nhập
+      </a>
+    </div> 
+    <div class="col-1">
+      <a href="{%url 'register'%}">
+        Đăng kí
+      </a>
+    </div>
+    {%endif%}
   </div>
     
   </div>

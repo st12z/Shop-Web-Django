@@ -8,10 +8,14 @@ if (formSearch) {
   if (buttonSearch) {
     buttonSearch.addEventListener("click", () => {
       const keyword = inputSearch.value;
-      if (keyword) {
+      if (keyword && keyword!="") {
         url.searchParams.set("keyword", keyword);
-        window.location.href = url;
+        
       }
+      else{
+        url.searchParams.delete("keyword");
+      }
+      window.location.href = url;
     });
   }
 }

@@ -1,12 +1,17 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
-
+class User(AbstractUser):
+    username=models.CharField(
+        max_length=255)
+    email=models.EmailField(unique=True,null=True)
+    avatar=models.CharField(max_length=200,default="images/avatar.jpg")
+    USERNAME_FIELD='email'
+    REQUIRED_FIELDS=['username']
 class Category(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
-
     def __str__(self):
         return self.name
 
@@ -34,14 +39,25 @@ class Cart(models.Model):
     products = models.ManyToManyField(
         'Product', blank=True)  # Trường cho các sản phẩm
     # Trường cho người dùng
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)  # Thời gian tạo
     updated_at = models.DateTimeField(auto_now=True)  # Thời gian cập nhật
 
     def __str__(self):
         return self.cart_id  # Hiển thị Cart ID khi in ra
 
+class CartUser(models.Model):
+    cart_id = models.CharField(
+        max_length=255, unique=True)  # Trường cho Cart ID
+    products = models.ManyToManyField(
+        'Product', blank=True)  # Trường cho các sản phẩm
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True)
+    # Trường cho người dùng
+    created_at = models.DateTimeField(auto_now_add=True)  # Thời gian tạo
+    updated_at = models.DateTimeField(auto_now=True)  # Thời gian cập nhật
+
+    def __str__(self):
+        return self.cart_id  # Hiển thị Cart ID khi in ra
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='items',
