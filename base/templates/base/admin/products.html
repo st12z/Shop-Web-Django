@@ -1,0 +1,68 @@
+{%extends 'admin/main.html'%} {%load static%} 
+{%block content%} 
+{% if products%}
+<div class="container">
+  <div class="mb-4">
+      <a href="{%url 'create-product'%}">
+        <button type="button" class="btn btn-outline-secondary"><i class="fa-solid fa-plus"></i>Thêm mới sản phẩm</button>
+      </a>
+    </div>
+  <div class="row ">
+    <table class="table-cart">
+      <thead>
+        <th>STT</th>
+        <th>Tên sản phẩm</th>
+        <th>Ảnh</th>
+        <th>Giá cũ</th>
+        <th>Giảm giá</th>
+        <th>Giá mới</th>
+        <th>Hành động</th>
+      </thead>
+      <tbody>
+        {%for item in products%}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{item.name}}</td>
+          <td>
+            <img src="{% static 'client/' %}{{item.thumbnail}}" alt="Ảnh" />
+          </td>
+          <td>{{item.price}} VNĐ</td>
+          <td>{{item.discountPercentage}}%</td>
+          <td>{{item.priceNew}} VNĐ</td>
+
+          <td>
+            <button class="btn btn-warning">
+              <a href="{%url 'delete-product' item.id%}">Delete</a>
+            </button>
+            <button class="btn btn-secondary">
+              <a href="{%url 'edit-product' item.id%}">Edit</a>
+            </button>
+          </td>
+        </tr>
+        {%endfor%}
+      </tbody>
+    </table>
+  </div>
+  <nav aria-label="..." class="nav-pagination">
+    <ul class="pagination">
+      {% if currentPage|add:"-1" >= firstPage %}
+      <li class="page-item">
+        <a class="page-link" data-page={{ currentPage|add:"-1"}}>Previous</a>
+      </li>
+      {%endif%}
+      {%for i in countPage%}
+      <li class="{% if i == currentPage %}page-item active{% else %}page-item{% endif %}" >
+        <a class="page-link" data-page={{i}}>{{ i }}</a>
+      </li>
+      {%endfor%}
+      {% if currentPage|add:"1" <= lastPage %}
+      
+      <li class="page-item">
+        <a class="page-link" data-page="{{ currentPage|add:"1" }}">Next</a>
+      </li>
+      {%endif%}
+    </ul>
+  </nav>
+</div>
+
+{%endif%} {%endblock%}

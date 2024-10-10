@@ -1,0 +1,65 @@
+{%extends 'admin/main.html'%} {%load static%} {%block content%}
+<style>
+  input {
+    border: 1px solid #ced4da !important; /* Điều chỉnh màu sắc hoặc kích thước tùy thích */
+    box-shadow: none !important;
+  }
+</style>
+<div class="ml-5">
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="name">Tên sản phẩm</label>
+      <input
+        type="text"
+        class="form-control"
+        id="name"
+        name="name"
+        readonly
+        value="{{product.name}}"
+      />
+    </div>
+    <div class="form-group">
+      <label for="price">Giá</label>
+      <input
+        type="text"
+        class="form-control"
+        id="price"
+        name="price"
+        value="{{product.price}}"
+      />
+    </div>
+    <div class="form-group">
+      <label for="discountPercentage">Giảm giá</label>
+      <input
+        type="number"
+        class="form-control"
+        id="discountPercentage"
+        value="{{product.discountPercentage}}"
+        name="discountPercentage"
+   
+      />
+    </div>
+    <div class="form-group">
+      <label for="stock">Số lượng</label>
+      <input
+        type="number"
+        class="form-control"
+        id="stock"
+        value="{{product.stock}}"
+        name="stock"
+      />
+    </div>
+    <div class="form-group">
+      <label for="image"><b>Ảnh</b></label>
+      <img
+        src="{% static 'client/' %}{{ product.thumbnail }}"
+        alt="Product Thumbnail"
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Cập nhật</button>
+  </form>
+</div>
+
+{%endblock%}

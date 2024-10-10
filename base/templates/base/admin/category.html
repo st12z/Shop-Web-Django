@@ -1,0 +1,42 @@
+{%extends 'admin/main.html'%} 
+{%load static%}
+ {%block content%} 
+ {% if categories%}
+<div class="container">
+  <div class="mb-4">
+    <a href="{%url 'create-category'%}">
+      <button type="button" class="btn btn-outline-secondary">
+        <i class="fa-solid fa-plus"></i>Thêm mới danh mục
+      </button>
+    </a>
+  </div>
+  <div class="row">
+    <table class="table-cart">
+      <thead>
+        <th>STT</th>
+        <th>Tên danh mục</th>
+        <th>Mô tả</th>
+        <th>Hành động</th>
+      </thead>
+      <tbody>
+        {%for item in categories%}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{item.name}}</td>
+          <td>{{item.description}}</td>
+          <td>
+            <button class="btn btn-warning">
+              <a href="{%url 'delete-category' item.id%}">Delete</a>
+            </button>
+            <button class="btn btn-secondary">
+              <a href="{%url 'edit-category' item.id%}">Edit</a>
+            </button>
+          </td>
+        </tr>
+        {%endfor%}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{%endif%} {%endblock%}

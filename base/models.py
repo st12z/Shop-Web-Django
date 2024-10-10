@@ -7,14 +7,17 @@ class User(AbstractUser):
         max_length=255)
     email=models.EmailField(unique=True,null=True)
     avatar=models.CharField(max_length=200,default="images/avatar.jpg")
+    role=models.BooleanField(default=False)
     USERNAME_FIELD='email'
     REQUIRED_FIELDS=['username']
+
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
+    deleted=models.BooleanField(default=False)
     def __str__(self):
         return self.name
-
 
 class Product(models.Model):
     name = models.CharField(max_length=200)
@@ -28,10 +31,18 @@ class Product(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
     deleteAt = models.DateTimeField(auto_now=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-
+    deleted=models.BooleanField(default=False)
     def __str__(self) -> str:
         return self.name
 
+class Comment(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True)
+    # Trường cho người dùng
+    content=models.CharField(max_length=200,default="")
+    product=models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)  # Thời gian tạo
+    updated_at = models.DateTimeField(auto_now=True)  # Thời gian cập nhật
 
 class Cart(models.Model):
     cart_id = models.CharField(
@@ -92,3 +103,4 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} x {self.product.name}"
+

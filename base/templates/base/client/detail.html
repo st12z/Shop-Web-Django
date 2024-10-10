@@ -1,0 +1,62 @@
+{%extends 'client/main.html'%} {%load static%} {%block content%}
+<div class="container">
+  <div class="row">
+    <div class="col-4">
+      <div class="detail inner-image">
+        <img src="{% static 'client/' %}{{product.thumbnail}}"" alt="thumbnail" />
+      </div>
+    </div>
+    <div class="col-8">
+      <div class="detail inner-content">
+        <h2>Tên sản phẩm: <span>{{product.name}}</span></h2>
+        <p style="text-decoration: line-through">
+          <b>Giá cũ: </b>{{ product.price }} VNĐ
+        </p>
+        <p>
+          <span class="badge badge-danger"
+            >Giảm giá: {{ product.discountPercentage }} %</span
+          >
+        </p>
+        <p><b>Giá mới: </b>{{ product.priceNew }} VNĐ</p>
+
+        <a href="{% url 'buy-product' product.id%}">
+          <button class="btn btn-primary">Thêm vào giỏ hàng</button>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="inner-description mt-5">
+    <p><b>{{product.description}}</b></p>
+  </a>
+  <!-- Button trigger modal -->
+</div>
+<div class="row d-flex justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <div class="card shadow-0 border" style="background-color: #f0f2f5;">
+      <div class="card-body p-4">
+        <div data-mdb-input-init class="form-outline mb-4">
+          <form method="POST">
+            {% csrf_token %}
+            <input type="text" id="addANote" class="form-control" name="content" placeholder="Type comment..." />
+            <button type="submit" class="btn btn-primary">Nhập</button>
+          </form>
+        </div>
+        {% for comment in comments %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex flex-column">
+                    <div class="d-flex flex-row align-items-center mb-2">
+                        <img src="{% static 'client/images/avatar.jpg' %}" alt="avatar" width="25" height="25" />
+                        <p class="small ml-1 mb-0 ms-2"><b>{{ comment.user.username }} {{comment.created_at|timesince}}</b></p>
+                    </div>
+                    <p>{{ comment.content }}</p>
+                    {% if request.user.id == comment.user.id %}  <!-- Sử dụng ID để so sánh -->
+                        <a href="{% url 'delete-comment' comment.id %}">Delete</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+  {%endblock%}
+

@@ -1,0 +1,44 @@
+.container.login{
+  padding-top: 150px;
+}
+.inner-login{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+table img {
+  width: 100px;
+  height: auto;
+}
+
+table th, table td {
+  width: 150px;
+  text-align: center;
+}
+
+table tr {
+  min-height: 50px;
+  
+}
+.table-cart{
+  margin-left: 30px;
+  border:1px solid #ddd;
+}
+.table-cart tr{
+  border:1px solid #ddd;
+}
+.table-cart td{
+  border:1px solid #ddd;
+}
+.table-cart th{
+  border:1px solid #ddd;
+}
+.inner-quantity{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+.nav-pagination{
+  margin-top: 20px;
+  margin-left: 16px;
+}
