@@ -1,0 +1,47 @@
+{%extends 'admin/main.html'%}
+{%load static%} 
+{%block content%} 
+{% if infoOrders%} 
+{%for infoOrder in infoOrders%}
+<h4 class="ml-3">Đơn số {{ forloop.counter }} của {{infoOrder.infoCustomer.name}}</h4>
+<a class="ml-3 mb-3" href="{%url 'edit-order' infoOrder.id%}">
+  <button class="btn btn-outline-secondary mb-3">Edit</button>
+</a>
+<div class="row mb-5">
+  <table class="table-cart">
+    <thead>
+      <th>Người đặt</th>
+      <th>Tên sản phẩm</th>
+      <th>Ảnh</th>
+      <th>Giá cũ</th>
+      <th>Giảm giá</th>
+      <th>Giá mới</th>
+      <th>Số lượng</th>
+      <th>Tổng tiền</th>
+      <th>Trạng thái</th>
+      <th>Ngày đặt</th>
+    </thead>
+    <tbody>
+      {%for item in infoOrder.infoItems%}
+      <tr>
+        <td>{{item.name}}</td>
+        <td>{{item.product.name}}</td>
+        <td>
+          <img
+            src="{% static 'client/' %}{{item.product.thumbnail}}"
+            alt="Ảnh"
+          />
+        </td>
+        <td>{{item.product.price}} VNĐ</td>
+        <td>{{item.product.discountPercentage}}%</td>
+        <td>{{item.product.priceNew}} VNĐ</td>
+        <td>{{item.quantity}}</td>
+        <td>{{item.totalPrice}} VNĐ</td>
+        <td><span class="badge badge-warning">{{item.status}}</span></td>
+        <td>{{item.created_at}}</td>
+      </tr>
+      {%endfor%}
+    </tbody>
+  </table>
+</div>
+{%endfor%} {%endif%} {%endblock%}

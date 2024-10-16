@@ -127,4 +127,14 @@ STATICFILES_DIRS=[
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# settings.py
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_SSL = True
+EMAIL_HOST = 'smtp.your_email_provider.com'  # Máy chủ SMTP của bạn
+EMAIL_PORT = 465  # Thông thường là 465 khi dùng SSL
+EMAIL_HOST_USER = 'ckp2004vn@gmail.com'
+
+EMAIL_SSL_CERTFILE = None
+EMAIL_SSL_KEYFILE = None
+
+EMAIL_HOST_PASSWORD = "espu qfrx uojm hbhl"  # Mật khẩu ứng dụng của bạn

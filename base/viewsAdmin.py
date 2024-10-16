@@ -36,7 +36,8 @@ def registerPage(request):
             messages.success(request, "Đăng kí thành công!")
             # Chuyển hướng đến trang đăng nhập sau khi đăng ký thành công
             return redirect('')
-    return render(request, 'base/admin/register-page.html')
+    context={'pageTitle':"Đăng kí"}
+    return render(request, 'base/admin/register-page.html',context)
 
 
 def loginPage(request):
@@ -54,7 +55,8 @@ def loginPage(request):
                 return redirect('dashboard')
             else:
                 messages.error(request, 'Sai mật khẩu!')
-    return render(request, 'base/admin/login-page.html')
+    context={'pageTitle':"Đăng nhập"}
+    return render(request, 'base/admin/login-page.html',context)
 
 
 def logoutPage(request):
@@ -65,6 +67,7 @@ def logoutPage(request):
 def home(request):
     if not request.user.is_authenticated:
         return redirect('')
+    context={'pageTitle':"Trang chủ"}
     return render(request, 'base/admin/home.html')
 
 
@@ -127,7 +130,7 @@ def products(request):
     if not request.user.is_authenticated:
         return redirect('')
     page = 'products'
-    products = Product.objects.filter(deleted=False).order_by('-createdAt')
+    products = Product.objects.filter().order_by('-createdAt')
     currentPage = request.GET.get('page', '1')
     itemPerPage = 4
     countPage = (len(products) + itemPerPage - 1) // itemPerPage  # Số trang
@@ -145,7 +148,8 @@ def products(request):
                'currentPage': currentPage,
                'countPage': range(1, countPage + 1),
                'firstPage': 1,
-               'page': 'products'}
+               'page': 'products'
+               ,'pageTitle':'Trang danh sách sản phẩm'}
     return render(request, 'base/admin/products.html', context)
 
 
@@ -177,7 +181,7 @@ def editProduct(request, pk):
             product.stock = int(stock)
         product.save()
         return redirect('products')
-    context = {'product': product}
+    context = {'product': product,'pageTitle':'Chỉnh sửa sản phẩm'}
     return render(request, 'base/admin/edit-product.html', context)
 
 
@@ -221,11 +225,11 @@ def createProduct(request):
             product.save()
             return redirect("products")
     categories = Category.objects.all()
-    context = {'categories': categories}
+    context = {'categories': categories,'pageTitle':'Tạo mới sản phẩm'}
     return render(request, 'base/admin/create-product.html', context)
 def categories(request):
     categories=Category.objects.filter(deleted=False)
-    context={'categories':categories,'page':'categories'}
+    context={'categories':categories,'page':'categories','pageTitle':'Tạo mới danh mục'}
     return render(request,'base/admin/category.html',context)
 
 def editCategory(request,pk):
@@ -241,7 +245,7 @@ def editCategory(request,pk):
             category.description=description
         category.save()
         return redirect("categories")
-    context={'category':category}
+    context={'category':category,'pageTitle':'Chỉnh sửa danh mục'}
     return render(request,'base/admin/edit-category.html',context)
 def deleteCategory(request,pk):
     category=Category.objects.get(id=pk)
@@ -263,4 +267,59 @@ def createCategory(request):
             description=description
         )
         return redirect("categories")
-    return render(request,'base/admin/create-category.html')
+    context={'pageTitle':'Tạo mới sản phẩm'}
+    return render(request,'base/admin/create-category.html',context)
+
+def orders(request):
+    orders = Order.objects.all()
+    infoOrders = []
+    for order in orders:
+        infoItem = []
+        infoObject = {
+            'name': order.name,
+            'phone': order.phone,
+            'address': order.address,
+        }
+        orderItems = OrderItem.objects.filter(order=order)
+        totalPayment = 0
+        for item in orderItems:
+            priceNew = int(item.product.price *
+                        (100-item.product.discountPercentage)/100)
+            totalPrice = priceNew*item.quantity
+            objectProducts = {
+                'product': item.product,
+                'quantity': item.quantity,
+                'totalPrice': totalPrice,
+                'status':order.status,
+                'created_at':order.created_at.strftime('%d/%m/%Y %H:%M:%S'),
+                'name': order.name,
+            }
+            objectProducts['product'].price = "{:,.0f}".format(
+                objectProducts['product'].price)
+            objectProducts['product'].priceNew = "{:,.0f}".format(priceNew)
+            totalPayment += objectProducts['totalPrice']
+            objectProducts['totalPrice'] = "{:,.0f}".format(
+                objectProducts['totalPrice'])
+            infoItem.append(objectProducts)
+        totalPayment = "{:,.0f}".format(totalPayment)
+        infoOrder = {
+            'id':order.id,
+            'infoCustomer': infoObject,
+            'infoItems': infoItem,
+            'totalPayment': totalPayment,
+            
+        }
+        print(infoOrder)
+        infoOrders.append(infoOrder)
+    context={'pageTitle':'Quản lý đơn hàng','page':'orders','infoOrders': infoOrders,}
+    return render(request,'base/admin/order.html',context)
+def editOrder(request,pk):
+    order=Order.objects.get(id=pk)
+    if request.user.is_authenticated:
+        if request.method=='POST':
+            status=request.POST.get('status')
+            order.status=status
+            order.save()
+            return redirect('orders')
+    context={'order':order}
+    return render(request,'base/admin/edit-order.html',context)

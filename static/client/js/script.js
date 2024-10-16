@@ -10,7 +10,6 @@ if (formSearch) {
       const keyword = inputSearch.value;
       if (keyword && keyword!="") {
         url.searchParams.set("keyword", keyword);
-        
       }
       else{
         url.searchParams.delete("keyword");
@@ -61,9 +60,25 @@ if (radioPrice) {
         url.searchParams.delete("priceOrder");
       } else {
         url.searchParams.set("priceOrder", priceOrder);
+        url.searchParams.set("page",1);
       }
       window.location.href = url;
     });
   });
 }
 // price-option
+
+// category
+const buttonCategory=document.querySelectorAll("[button-category]");
+if(buttonCategory){
+  buttonCategory.forEach(button=>{
+    button.addEventListener("click",()=>{
+      const category=button.getAttribute("button-category");
+      url.searchParams.set("category",category);
+      url.searchParams.set('page',1);
+      window.location.href=url;
+    })
+    
+  })
+}
+// end category

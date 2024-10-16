@@ -10,8 +10,13 @@ class User(AbstractUser):
     role=models.BooleanField(default=False)
     USERNAME_FIELD='email'
     REQUIRED_FIELDS=['username']
-
-
+class OTP(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True)
+    otp_code=models.CharField(max_length=6,default="")
+    updatedAt = models.DateTimeField(auto_now=True)
+    createdAt = models.DateTimeField(auto_now_add=True)
+    expiresAt=models.DateTimeField(blank=True,null=True)
 class Category(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
@@ -88,7 +93,7 @@ class Order(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)  # Ngày tạo đơn hàng
     updated_at = models.DateTimeField(auto_now=True)  # Ngày cập nhật đơn hàng
-
+    status=models.CharField(max_length=100,default="Đã đặt hàng")
     def __str__(self):
         return f"Order {self.id} by {self.name}"
 

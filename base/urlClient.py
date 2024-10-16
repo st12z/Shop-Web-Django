@@ -14,8 +14,8 @@ urlpatterns = [
     path('register',viewsClient.registerPage,name='register'),
     path('login',viewsClient.loginPage,name='login'),
     path('logout',viewsClient.logoutUser,name='logout'),
-    path('delete-comment/<str:pk>/',viewsClient.deleteComment,name='delete-comment')
-    
+    path('delete-comment/<str:pk>/',viewsClient.deleteComment,name='delete-comment'),
+    path('forgot-password',viewsClient.forgotPassword,name='forgot-password'),
     # end url client
 
 ]

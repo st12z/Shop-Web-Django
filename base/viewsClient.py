@@ -10,6 +10,7 @@ from helper.getOrder import getOrder
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
 from django.http import HttpResponse
+from helper.sendEmail import send_reset_email
 import locale
 # Create your views here.
 
@@ -37,7 +38,7 @@ def registerPage(request):
             messages.success(request, "Đăng kí thành công!")
             # Chuyển hướng đến trang đăng nhập sau khi đăng ký thành công
             return redirect('login')
-    context = {'quantityProducts': quantityProducts}
+    context = {'quantityProducts': quantityProducts,'pageTitle':'Trang đăng kí'}
     return render(request, 'base/client/registerPage.html', context)
 
 
@@ -72,7 +73,7 @@ def loginPage(request):
                 return response
             else:
                 messages.error(request, 'Sai mật khẩu!')
-    context = {'quantityProducts': quantityProducts}
+    context = {'quantityProducts': quantityProducts,'pageTitle':'Trang đăng nhập'}
 
     response = render(request, 'base/client/loginPage.html', context)
     response.set_cookie('cartId', cartId, max_age=7 *
@@ -108,7 +109,7 @@ def home(request):
     sortValue = request.GET.get('sortValue', '')
     sort_order = '' if sortValue == 'asc' else '-'
     priceOrder = request.GET.get('priceOrder', '')
-
+    category =request.GET.get('category','')
     quantityProducts = getProductCart(cartId)
     quantityOrder = 0
     if request.user.is_authenticated:
@@ -131,6 +132,7 @@ def home(request):
     products = Product.objects.filter(
         Q(deleted=False) &
         Q(name__icontains=keyword) &
+        Q(category__name__icontains=category) &
         Q(price__gte=min_price) &
         Q(price__lte=max_price)
     )
@@ -143,7 +145,7 @@ def home(request):
     else:
         notification = ""
     # Xử lý phân trang
-    itemPerPage = 4
+    itemPerPage = 6
     countPage = (len(products) + itemPerPage - 1) // itemPerPage  # Số trang
     currentPage = int(currentPage)
     begin = itemPerPage * (currentPage - 1)
@@ -154,6 +156,10 @@ def home(request):
         priceNew = int(product.price*(100-product.discountPercentage)/100)
         product.price = "{:,.0f}".format(product.price)
         product.priceNew = "{:,.0f}".format(priceNew)
+    #Category
+    categories = Category.objects.all()
+
+    
     # Cập nhật context
     context = {
         'products': products,
@@ -167,7 +173,10 @@ def home(request):
         'priceOrder': priceOrder,
         'quantityProducts': quantityProducts,
         'cartId': cartId,
-        'quantityOrders': quantityOrder
+        'quantityOrders': quantityOrder,
+        'pageTitle':'Trang chủ',
+        'categories':categories,
+        'categoryOption':category,
     }
     # Render template và thiết lập cookie
     response = render(request, 'base/client/home.html', context)
@@ -196,7 +205,7 @@ def detailProduct(request, pk):
     except:
         comments = []
     context = {'product': product, 'quantityProducts': quantityProducts,
-               'quantityOrders': quantityOrder, 'comments': comments}
+               'quantityOrders': quantityOrder, 'comments': comments,'pageTitle':'Trang chi tiết sản phẩm'}
     if request.method == "POST":
         if not request.user.is_authenticated:
             return redirect('login')
@@ -258,10 +267,10 @@ def detailCart(request):
             products.append(objectProducts)
         totalPayment = "{:,.0f}".format(totalPayment)
         context = {'products': products, 'totalPayment': totalPayment,
-                   'quantityProducts': quantityProducts, 'quantityOrders': quantityOrder}
+                   'quantityProducts': quantityProducts, 'quantityOrders': quantityOrder,'pageTitle':'Trang giỏ hàng'}
     except:
         notification = "Giỏ hàng trống!"
-        context = {'notification': notification}
+        context = {'notification': notification,'pageTitle':'Trang giỏ hàng '}
     return render(request, 'base/client/detail-cart.html', context)
 
 
@@ -330,7 +339,7 @@ def checkOut(request):
     pricePayment = totalPayment
     totalPayment = "{:,.0f}".format(totalPayment)
     context = {'products': products, 'totalPayment': totalPayment,
-               'quantityProducts': quantityProducts, 'quantityOrders': quantityOrder}
+               'quantityProducts': quantityProducts,'pageTitle': 'Trang thanh toán','quantityOrders': quantityOrder}
     if request.method == "POST":
         if not request.user.is_authenticated:
             return redirect('login')
@@ -380,7 +389,8 @@ def detailOrder(request):
                     'product': item.product,
                     'quantity': item.quantity,
                     'totalPrice': totalPrice,
-
+                    'status':order.status,
+                    'created_at':order.created_at.strftime('%d/%m/%Y %H:%M:%S')
                 }
                 objectProducts['product'].price = "{:,.0f}".format(
                     objectProducts['product'].price)
@@ -393,13 +403,14 @@ def detailOrder(request):
             infoOrder = {
                 'infoCustomer': infoObject,
                 'infoItems': infoItem,
-                'totalPayment': totalPayment
+                'totalPayment': totalPayment,
             }
             infoOrders.append(infoOrder)
         context = {
             'quantityProducts': quantityProducts,
             'infoOrders': infoOrders,
-            'quantityOrders': quantityOrder}
+            'quantityOrders': quantityOrder,
+            'pageTitle':'Trang chi tiết đơn hàng'}
     else:
         notification = "Giỏ hàng trống!"
         context = {'notification': notification,
@@ -412,3 +423,20 @@ def deleteComment(request, pk):
     comment.delete()
     previous_url = request.META.get('HTTP_REFERER', '/')
     return redirect(previous_url)
+
+# views.py
+
+
+
+def forgotPassword(request):
+    if request.method == "POST":
+        email = request.POST.get('email')  # Nhận email từ form
+        user = User.objects.filter(email=email).first()  # Tìm kiếm người dùng theo email
+
+        if user is not None:
+            send_reset_email(email)   # Gọi hàm gửi email
+            messages.success(request, 'Mã OTP đã được gửi vào email của bạn!')  # Thông báo thành công
+        else:
+            messages.error(request, 'Không tồn tại email!')  # Thông báo lỗi
+
+    return render(request, 'base/client/forgot-password.html')  # Trả về template

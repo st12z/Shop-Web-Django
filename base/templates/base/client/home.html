@@ -2,19 +2,20 @@
 {%load static%}
 {%block content%} 
 <div class="container">
+  {%include 'base/client/category.html'%}
   {%include 'base/client/select-order.html'%}
   {%include 'base/client/option-price.html'%}
   {% if products %}
     <div class="row">
       {% for product in products %}
         <div class="col-xl-4 col-lg-4 col-sm-4 col-12 mb-3">
-          <div class="card card-product" style="height:100%; width:18rem;">
+          <div class="card card-product" style="height:100%; width:20rem; height:auto">
             <div class="inner-thumbnail">
               <img src="{% static 'client/' %}{{product.thumbnail}}" class="card-img-top" alt="thumbnail">
             </div>
             <div class="card-body">
               <h5 class="card-title">{{ product.name }}</h5>
-              <p><b>Giá cũ: </b>{{ product.price }} VNĐ</p>
+              <p class="price-old"><b>Giá cũ: </b>{{ product.price }} VNĐ</p>
               <div class="discount">
                 <p><span class="badge badge-danger">Giảm giá: {{product.discountPercentage}}%</span></p>
               </div>

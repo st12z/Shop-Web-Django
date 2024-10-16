@@ -1,0 +1,28 @@
+{%extends 'admin/main.html'%}
+ {%load static%} 
+ {%block content%}
+<style>
+  input {
+    border: 1px solid #ced4da !important; /* Điều chỉnh màu sắc hoặc kích thước tùy thích */
+    box-shadow: none !important;
+  }
+</style>
+<div class="ml-5">
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="status">Trạng thái đơn hàng</label>
+      <input
+        type="text"
+        class="form-control"
+        id="status"
+        name="status"
+        value="{{order.status}}"
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Cập nhật</button>
+  </form>
+</div>
+
+{%endblock%}

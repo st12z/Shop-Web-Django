@@ -15,7 +15,9 @@ urlpatterns = [
     path('edit-product/<str:pk>/',viewsAdmin.editProduct,name='edit-product'),
     path('edit-category/<str:pk>/',viewsAdmin.editCategory,name='edit-category'),
     path('create-product',viewsAdmin.createProduct,name='create-product'),
-    path('create-category',viewsAdmin.createCategory,name='create-category')
+    path('create-category',viewsAdmin.createCategory,name='create-category'),
+    path('orders',viewsAdmin.orders,name='orders'),
+    path('edit-order/<str:pk>/',viewsAdmin.editOrder,name='edit-order')
 
 ]
 

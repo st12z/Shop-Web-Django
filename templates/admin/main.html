@@ -5,11 +5,11 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Elegant Dashboard | Dashboard</title>
+    <title>{{pageTitle}}</title>
     <!-- Favicon -->
     <link
       rel="shortcut icon"
-      href="{%static 'img/svg/logo.svg' %}"
+      href="{%static 'img/svg/logo-s.svg' %}"
       type="image/x-icon"
     />
     <!-- Custom styles -->
@@ -30,7 +30,7 @@
         <div class="sidebar-start">
           <div class="sidebar-head">
             <div class="logo-text">
-              <img width="100px" src="{%static 'client/images/logo.png'%}" />
+              <img width="100px;height=auto" src="{%static 'client/images/logo-shop.png'%}" />
             </div>
           </div>
           <div class="sidebar-body">
@@ -39,10 +39,13 @@
                 <a class="{% if page == 'dashboard' %}active{% else %}{% endif %}" href="{% url 'dashboard' %}"> Dashboard</a>
               </li>
               <li>
-                <a class="{% if page == 'products' %}active{% else %}{% endif %}"   href="{%url 'products'%}"> Danh sách sản phẩm</a>
+                <a class="{% if page == 'products' %}active{% else %}{% endif %}"   href="{%url 'products'%}"> Quản lý sản phẩm</a>
               </li>
               <li>
-                <a class="{% if page == 'categories' %}active{% else %}{% endif %}"   href="{%url 'categories'%}"> Danh mục sản phẩm</a>
+                <a class="{% if page == 'categories' %}active{% else %}{% endif %}"   href="{%url 'categories'%}"> Quản lý sản phẩm</a>
+              </li>
+              <li>
+                <a class="{% if page == 'orders' %}active{% else %}{% endif %}"   href="{%url 'orders'%}"> Quản lý đơn hàng</a>
               </li>
             </ul>
           </div>

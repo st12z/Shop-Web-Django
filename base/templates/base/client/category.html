@@ -1,0 +1,14 @@
+{%if categories%}
+<ul class="nav nav-tabs mb-5">
+  {%for category in categories%}
+  <li class="nav-item">
+    <a
+      class="{% if category.name == categoryOption %}nav-link active{% else %}nav-link{% endif %}"
+      href="#"
+      button-category="{{ category.name }}"
+      >{{ category.name }}</a
+    >
+  </li>
+  {%endfor%}
+</ul>
+{%endif%}

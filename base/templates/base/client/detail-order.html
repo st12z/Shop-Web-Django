@@ -15,6 +15,8 @@
           <th>Giá mới</th>
           <th>Số lượng</th>
           <th>Tổng tiền</th>
+          <th>Trạng thái</th>
+          <th>Ngày đặt </th>
         </thead>
         <tbody>
           {%for item in infoOrder.infoItems%}
@@ -29,6 +31,8 @@
             <td>{{item.product.priceNew}} VNĐ</td>
             <td>{{item.quantity}}</td>
             <td>{{item.totalPrice}} VNĐ</td>
+            <td><span class="badge badge-warning">{{item.status}}</span></td>
+            <td>{{item.created_at}}</td>
           </tr>
           {%endfor%}
         </tbody>
