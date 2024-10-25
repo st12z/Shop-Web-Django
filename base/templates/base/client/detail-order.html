@@ -3,52 +3,132 @@
 <div class="container">
   <h1>Đơn hàng của bạn</h1>
   {% if infoOrders %}
-  {%for infoOrder in infoOrders%}
-    <div class="row">
-      <table class="table-cart">
-        <thead>
-          <th>STT</th>
-          <th>Tên sản phẩm</th>
-          <th>Ảnh</th>
-          <th>Giá cũ</th>
-          <th>Giảm giá</th>
-          <th>Giá mới</th>
-          <th>Số lượng</th>
-          <th>Tổng tiền</th>
-          <th>Trạng thái</th>
-          <th>Ngày đặt </th>
-        </thead>
-        <tbody>
-          {%for item in infoOrder.infoItems%}
-          <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{item.product.name}}</td>
-            <td>
-              <img src="{% static 'client/' %}{{item.product.thumbnail}}" alt="Ảnh" />
-            </td>
-            <td>{{item.product.price}} VNĐ</td>
-            <td>{{item.product.discountPercentage}}%</td>
-            <td>{{item.product.priceNew}} VNĐ</td>
-            <td>{{item.quantity}}</td>
-            <td>{{item.totalPrice}} VNĐ</td>
-            <td><span class="badge badge-warning">{{item.status}}</span></td>
-            <td>{{item.created_at}}</td>
-          </tr>
-          {%endfor%}
-        </tbody>
-      </table>
-      <h2>
-        Tổng tiền thanh toán: <span style="color: red">{{infoOrder.totalPayment}} VNĐ</span>
-      </h2>
-    </div>
-  <h1>Thông tin khách hàng<h1>
-  <p><b>Họ tên: </b>{{infoOrder.infoCustomer.name}}</p>
-  <p><b>Số điện thoại: </b>{{infoOrder.infoCustomer.phone}}</p>
-  <p><b>Địa chỉ: </b>{{infoOrder.infoCustomer.address}}</p>
-  {%endfor%}
+    {%for infoOrder in infoOrders%}
+      <div class="row">
+        <table class="table-cart">
+          <thead>
+            <th>STT</th>
+            <th>Tên sản phẩm</th>
+            <th>Ảnh</th>
+            <th>Giá cũ</th>
+            <th>Giảm giá</th>
+            <th>Giá mới</th>
+            <th>Số lượng</th>
+            <th>Tổng tiền</th>
+            <th>Trạng thái</th>
+            <th>Ngày đặt </th>
+          </thead>
+          <tbody>
+            {%for item in infoOrder.infoItems%}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{item.product.name}}</td>
+                <td>
+                  <img src="{% static 'client/' %}{{item.product.thumbnail}}" alt="Ảnh" />
+                </td>
+                <td>{{item.product.price}} VNĐ</td>
+                <td>{{item.product.discountPercentage}}%</td>
+                <td>{{item.product.priceNew}} VNĐ</td>
+                <td>{{item.quantity}}</td>
+                <td>{{item.totalPrice}} VNĐ</td>
+                <td><span class="badge badge-warning">{{item.status}}</span></td>
+                <td>{{item.created_at}}</td>
+              </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+      </div>
+      <h3>Tổng tiền thanh toán: <span style="color: red">{{infoOrder.totalPayment}} VNĐ </span></h3>
+      <h3>Thông tin khách hàng: </h3>
+      <p><b>Họ tên: </b>{{infoOrder.infoCustomer.name}}</p>
+      <p><b>Số điện thoại: </b>{{infoOrder.infoCustomer.phone}}</p>
+      <p><b>Địa chỉ: </b>{{infoOrder.infoCustomer.address}}</p>
+      <section class="vh-50">
+        <div class="container py-5 h-100">
+          <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12">
+              <div class="card card-stepper" style="border-radius: 16px;">        
+                <div class="card-body p-5">
+                  <div class="d-flex justify-content-between align-items-center mb-5">
+                    <div>
+                      <h5 class="mb-0">
+                        Đơn hàng
+                        <button class="btn btn-secondary" disabled>Đã đặt hàng</button>
+                        {% if infoOrder.status == 'Processed' %}
+                          <button class="btn btn-primary" >Hủy đơn hàng</button>
+                        {%endif%}
+                      </h5>
+                      
+                    </div>
+                  </div>
+                  <ul id="progressbar-2" class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2">
+                    {% if infoOrder.status == 'Processed' %}
+                      <li class="step0 active text-center" id="step1"></li>
+                      <li class="step0 text-muted text-center" id="step2"></li>
+                      <li class="step0 text-muted text-center" id="step3"></li>
+                      <li class="step0 text-muted text-end" id="step4"></li>
+                    {% elif infoOrder.status == 'Shipped' %}
+                      <li class="step0 active text-center" id="step1"></li>
+                      <li class="step0 active text-center" id="step2"></li>
+                      <li class="step0 text-muted text-center" id="step3"></li>
+                      <li class="step0 text-muted text-end" id="step4"></li>
+                    {% elif infoOrder.status == 'Enroute' %}
+                      <li class="step0 active text-center" id="step1"></li>
+                      <li class="step0 active text-center" id="step2"></li>
+                      <li class="step0 active text-center" id="step3"></li>
+                      <li class="step0 text-muted text-end" id="step4"></li>
+                    {% elif infoOrder.status == 'Arrived' %}
+                      <li class="step0 active text-center" id="step1"></li>
+                      <li class="step0 active text-center" id="step2"></li>
+                      <li class="step0 active text-center" id="step3"></li>
+                      <li class="step0 active text-end" id="step4"></li>
+                    {% else %}
+                      <li class="step0 text-muted text-center" id="step1"></li>
+                      <li class="step0 text-muted text-center" id="step2"></li>
+                      <li class="step0 text-muted text-center" id="step3"></li>
+                      <li class="step0 text-muted text-end" id="step4"></li>
+                    {% endif %}
+                  </ul>
+                  <div class="d-flex justify-content-between">
+                    <div class="d-lg-flex align-items-center">
+                      <i class="fas fa-clipboard-list fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                      <div>
+                        <p class="fw-bold mb-1">Order</p>
+                        <p class="fw-bold mb-0">Processed</p>
+                      </div>
+                    </div>
+                    <div class="d-lg-flex align-items-center">
+                      <i class="fas fa-box-open fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                      <div>
+                        <p class="fw-bold mb-1">Order</p>
+                        <p class="fw-bold mb-0">Shipped</p>
+                      </div>
+                    </div>
+                    <div class="d-lg-flex align-items-center">
+                      <i class="fas fa-shipping-fast fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                      <div>
+                        <p class="fw-bold mb-1">Order</p>
+                        <p class="fw-bold mb-0">En Route</p>
+                      </div>
+                    </div>
+                    <div class="d-lg-flex align-items-center">
+                      <i class="fas fa-home fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                      <div>
+                        <p class="fw-bold mb-1">Đơn hàng</p>
+                        <p class="fw-bold mb-0">Arrived</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section> 
+    {%endfor%}
   {%else%}
-  <h1>Đơn hàng trống</h1>
+    <h1>Đơn hàng trống</h1>
   {%endif%}
-  {% endblock %}
-  
 </div>
+{% endblock content %}
+

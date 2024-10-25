@@ -1,42 +1,49 @@
-{%extends 'client/main.html'%}
-{%load static%}
-{%block content%} 
+{% extends 'client/main.html'%}
+{% load static%} 
+{% block content%}
 <div class="container">
-  {%include 'base/client/category.html'%}
-  {%include 'base/client/select-order.html'%}
-  {%include 'base/client/option-price.html'%}
+  {% include 'base/client/category.html'%}
+  {% include 'base/client/select-order.html' %}
+  {% include 'base/client/option-price.html'%}
   {% if products %}
-    <div class="row">
-      {% for product in products %}
-        <div class="col-xl-4 col-lg-4 col-sm-4 col-12 mb-3">
-          <div class="card card-product" style="height:100%; width:20rem; height:auto">
-            <div class="inner-thumbnail">
-              <img src="{% static 'client/' %}{{product.thumbnail}}" class="card-img-top" alt="thumbnail">
-            </div>
-            <div class="card-body">
-              <h5 class="card-title">{{ product.name }}</h5>
-              <p class="price-old"><b>Giá cũ: </b>{{ product.price }} VNĐ</p>
-              <div class="discount">
-                <p><span class="badge badge-danger">Giảm giá: {{product.discountPercentage}}%</span></p>
-              </div>
-              <p><b>Giá mới: </b>{{ product.priceNew }} VNĐ</p>
-              <a href="{% url 'detail-product' product.id %}">
-                <i class="fa-solid fa-eye"></i>
-              </a>
-              <a href="{% url 'buy-product' product.id %}">
-                <i class="fa-solid fa-cart-plus"></i>
-              </a>
-            </div>
+  <div class="row">
+    {% for product in products %}
+    <div class="col-xl-4 col-lg-4 col-sm-4 col-12 mb-3">
+      <div
+        class="card card-product"
+        style="height: 100%; width: 20rem; height: auto"
+      >
+        <a href="{% url 'detail-product' product.id %}">
+          <div class="inner-thumbnail">
+            <img
+              src="{% static 'client/' %}{{product.thumbnail}}"
+              class="card-img-top"
+              alt="thumbnail"
+            />
           </div>
+        </a>
+        <div class="card-body">
+          <h5 class="card-title">{{ product.name }}</h5>
+          <p class="price-old"><b>Giá cũ: </b>{{ product.price }} VNĐ</p>
+          <div class="discount">
+            <p>
+              <span class="badge badge-danger"
+                >Giảm giá: {{product.discountPercentage}}%</span
+              >
+            </p>
+          </div>
+          <p><b>Giá mới: </b>{{ product.priceNew }} VNĐ</p>
         </div>
-      {% endfor %}
-    </div>
-    {%include 'base/client/pagination.html'%}
-  {% else %}
-    <h2>{{ notification }}</h2>
-  {% endif %}
-  
-</div>
 
+        <button class="btn btn-secondary" button-add-cart productId={{product.id}}>Thêm vào giỏ hàng</button>
+
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {%include 'base/client/pagination.html'%} {% else %}
+  <h2>{{ notification }}</h2>
+  {% endif %}
+</div>
 
 {%endblock%}

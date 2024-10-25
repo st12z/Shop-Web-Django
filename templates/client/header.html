@@ -21,9 +21,7 @@
     <div class="col-1">
       <a href="{%url 'detail-cart'%}">
         <i class="fa-solid fa-cart-shopping"></i>
-        {%if quantityProducts%}
-        ({{quantityProducts}})
-        {%endif%}
+        <span quantity-cart>({{quantityProducts}})</span>
       </a>
     </div>
     <div class="col-1">

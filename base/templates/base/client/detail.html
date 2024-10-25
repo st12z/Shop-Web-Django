@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-4">
       <div class="detail inner-image">
-        <img src="{% static 'client/' %}{{product.thumbnail}}"" alt="thumbnail" />
+        <img src="{% static 'client/' %}{{product.thumbnail}}" alt="thumbnail" />
       </div>
     </div>
     <div class="col-8">
@@ -18,10 +18,7 @@
           >
         </p>
         <p><b>Giá mới: </b>{{ product.priceNew }} VNĐ</p>
-
-        <a href="{% url 'buy-product' product.id%}">
-          <button class="btn btn-primary">Thêm vào giỏ hàng</button>
-        </a>
+        <button class="btn btn-primary" button-add-cart productId={{product.id}}>Thêm vào giỏ hàng</button>
       </div>
     </div>
   </div>

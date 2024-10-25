@@ -18,7 +18,7 @@
       </thead>
       <tbody>
         {%for item in products%}
-        <tr>
+        <tr record="{{item.product.id}}">
           <td>{{ forloop.counter }}</td>
           <td>{{item.product.name}}</td>
           <td>
@@ -29,22 +29,18 @@
           <td>{{item.product.priceNew}} VNĐ</td>
           <td>
             <div class="inner-quantity">
-              <a href="{% url 'decrease-product' item.product.id %}">
-                <button class="decrease">-</button>
-              </a>
-
+              <button button-process product-id={{item.product.id}} type-process="decrease">-</button>
               <input
                 style="width: 60px"
                 type="number"
                 name="quantity"
                 value="{{item.quantity}}"
+                quantity-cart-input="{{item.product.id}}"
               />
-              <a href="{% url 'increase-product' item.product.id %}">
-                <button class="increase">+</button>
-              </a>
+                <button button-process product-id={{item.product.id}} type-process="increase">+</button>
             </div>
           </td>
-          <td>{{item.totalPrice}} VNĐ</td>
+          <td><span total-price="{{item.product.id}}">{{item.totalPrice}} VNĐ</span></td>
           <td>
             <button class="btn btn-warning">
               <a href="{%url 'delete-cart' item.product.id%}">Delete</a>
@@ -56,7 +52,7 @@
     </table>
   </div>
   <h2>
-    Tổng tiền thanh toán: <span style="color: red">{{totalPayment}} VNĐ</span>
+    <span total-payment>Tổng tiền thanh toán: {{totalPayment}} VNĐ</span>
   </h2>
 
   <a href="{% url 'check-out'%}">

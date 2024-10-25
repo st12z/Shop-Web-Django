@@ -11,6 +11,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
 from django.http import HttpResponse
 from helper.sendEmail import send_reset_email
+from django.http import JsonResponse
+import json
 import locale
 # Create your views here.
 
@@ -23,22 +25,28 @@ def registerPage(request):
     if request.method == "POST":
         username = request.POST.get('username')
         email = request.POST.get('email')
-        password = request.POST.get('password')
-
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
         # Kiểm tra xem username có rỗng không
+        if len(password1) < 8 or len(password2) < 8:
+            messages.error(request, 'Mật khẩu phải có ít nhất 8 ký tự.')
+            return render(request, 'base/client/registerPage.html')
         if not username:
             messages.error(request, 'Tên đăng nhập không được để trống!')
         # Kiểm tra nếu email đã tồn tại
         elif User.objects.filter(email=email).exists():
             messages.error(request, 'Email đã tồn tại!')
+        elif password1!=password2:
+            messages.error(request, 'Nhập lại mật khảu!')
         else:
             user = User(username=username, email=email)
-            user.set_password(password)  # Mã hóa mật khẩu
+            user.set_password(password1)  # Mã hóa mật khẩu
             user.save()  # Lưu tài khoản mới
             messages.success(request, "Đăng kí thành công!")
             # Chuyển hướng đến trang đăng nhập sau khi đăng ký thành công
             return redirect('login')
-    context = {'quantityProducts': quantityProducts,'pageTitle':'Trang đăng kí'}
+    context = {'quantityProducts': quantityProducts,
+               'pageTitle': 'Trang đăng kí'}
     return render(request, 'base/client/registerPage.html', context)
 
 
@@ -73,7 +81,8 @@ def loginPage(request):
                 return response
             else:
                 messages.error(request, 'Sai mật khẩu!')
-    context = {'quantityProducts': quantityProducts,'pageTitle':'Trang đăng nhập'}
+    context = {'quantityProducts': quantityProducts,
+               'pageTitle': 'Trang đăng nhập'}
 
     response = render(request, 'base/client/loginPage.html', context)
     response.set_cookie('cartId', cartId, max_age=7 *
@@ -109,7 +118,7 @@ def home(request):
     sortValue = request.GET.get('sortValue', '')
     sort_order = '' if sortValue == 'asc' else '-'
     priceOrder = request.GET.get('priceOrder', '')
-    category =request.GET.get('category','')
+    category = request.GET.get('category', '')
     quantityProducts = getProductCart(cartId)
     quantityOrder = 0
     if request.user.is_authenticated:
@@ -156,10 +165,9 @@ def home(request):
         priceNew = int(product.price*(100-product.discountPercentage)/100)
         product.price = "{:,.0f}".format(product.price)
         product.priceNew = "{:,.0f}".format(priceNew)
-    #Category
+    # Category
     categories = Category.objects.all()
 
-    
     # Cập nhật context
     context = {
         'products': products,
@@ -174,9 +182,9 @@ def home(request):
         'quantityProducts': quantityProducts,
         'cartId': cartId,
         'quantityOrders': quantityOrder,
-        'pageTitle':'Trang chủ',
-        'categories':categories,
-        'categoryOption':category,
+        'pageTitle': 'Trang chủ',
+        'categories': categories,
+        'categoryOption': category,
     }
     # Render template và thiết lập cookie
     response = render(request, 'base/client/home.html', context)
@@ -205,7 +213,7 @@ def detailProduct(request, pk):
     except:
         comments = []
     context = {'product': product, 'quantityProducts': quantityProducts,
-               'quantityOrders': quantityOrder, 'comments': comments,'pageTitle':'Trang chi tiết sản phẩm'}
+               'quantityOrders': quantityOrder, 'comments': comments, 'pageTitle': 'Trang chi tiết sản phẩm'}
     if request.method == "POST":
         if not request.user.is_authenticated:
             return redirect('login')
@@ -218,19 +226,56 @@ def detailProduct(request, pk):
     return render(request, 'base/client/detail.html', context)
 
 
-def buyProduct(request, pk):
-    product = Product.objects.get(id=pk)
-    cookies = request.COOKIES
-    cartId = cookies.get("cartId")
-    cart = Cart.objects.get(cart_id=cartId)
-    cart_items, created = CartItem.objects.get_or_create(
-        cart=cart, product=product)
-    cart.products.add(product)
-    if not created:
-        cart_items.quantity += 1
-    cart_items.save()
-    previous_url = request.META.get('HTTP_REFERER', '/')
-    return redirect(previous_url)
+def addProductToCart(request):
+    if request.method == 'POST':
+        try:
+            # Kiểm tra dữ liệu POST nhận được
+            data = json.loads(request.body)
+            print("Data received:", data)
+
+            product_id = data.get('productId')
+            print("Product ID:", product_id)
+
+            # Kiểm tra nếu product_id có tồn tại và hợp lệ
+            if not product_id:
+                return JsonResponse({'error': 'Product ID is missing'}, status=400)
+
+            # Lấy sản phẩm từ cơ sở dữ liệu
+            product = Product.objects.get(id=product_id)
+            print("Product:", product)
+
+            # Lấy cart từ cookie
+            cookies = request.COOKIES
+            cartId = cookies.get("cartId")
+            if not cartId:
+                return JsonResponse({'error': 'Cart ID is missing'}, status=400)
+
+            # Lấy giỏ hàng
+            cart = Cart.objects.get(cart_id=cartId)
+            print("Cart:", cart)
+
+            # Tạo hoặc lấy CartItem
+            cart_item, created = CartItem.objects.get_or_create(
+                cart=cart, product=product)
+            if not created:
+                cart_item.quantity += 1
+            cart_item.save()
+
+            # Tính tổng số lượng sản phẩm trong giỏ hàng
+            total_quantity = sum(
+                item.quantity for item in CartItem.objects.filter(cart=cart))
+            print("Total quantity in cart:", total_quantity)
+
+            # Trả về JSON response
+            return JsonResponse({'total_quantity': total_quantity})
+
+        except Product.DoesNotExist:
+            return JsonResponse({'error': 'Product does not exist'}, status=404)
+        except Exception as e:
+            print("Error:", e)
+            return JsonResponse({'error': 'Something went wrong'}, status=500)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 
 def detailCart(request):
@@ -267,37 +312,82 @@ def detailCart(request):
             products.append(objectProducts)
         totalPayment = "{:,.0f}".format(totalPayment)
         context = {'products': products, 'totalPayment': totalPayment,
-                   'quantityProducts': quantityProducts, 'quantityOrders': quantityOrder,'pageTitle':'Trang giỏ hàng'}
+                   'quantityProducts': quantityProducts, 'quantityOrders': quantityOrder, 'pageTitle': 'Trang giỏ hàng'}
     except:
         notification = "Giỏ hàng trống!"
-        context = {'notification': notification,'pageTitle':'Trang giỏ hàng '}
+        context = {'notification': notification,
+                   'pageTitle': 'Trang giỏ hàng '}
     return render(request, 'base/client/detail-cart.html', context)
 
 
-def decreaseProduct(request, pk):
-    cart_id = request.COOKIES.get('cartId')
-    cart = Cart.objects.get(cart_id=cart_id)
-    product = Product.objects.get(id=pk)
-    cart_items = CartItem.objects.get(cart=cart, product=product)
-    if cart_items.quantity > 1:
-        cart_items.quantity -= 1
-        cart_items.save()
-    else:
-        cart_items.delete()
+def decreaseProduct(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        product_id = data.get('productId')
+        product = Product.objects.get(id=product_id)
+        cookies = request.COOKIES
+        cartId = cookies.get("cartId")
+        cart = Cart.objects.get(cart_id=cartId)
+        cart_items = CartItem.objects.filter(cart=cart)
+        cart_item = CartItem.objects.get(cart=cart, product=product)
+        print(cart_item)
+        quantity = 0
+        if cart_item.quantity > 1:
+            cart_item.quantity -= 1
+            quantity = cart_item.quantity
+        cart_item.save()
+        total_price = "{:,.0f}".format(int(quantity*(cart_item.product.price)*(1-cart_item.product.discountPercentage/100)))
+        total_quantity = sum(
+        item.quantity for item in CartItem.objects.filter(cart=cart))
+        totalPayment=0
+        for item in cart_items:
+            totalItem=int(quantity*(item.product.price)*(1-item.product.discountPercentage/100))
+            totalPayment+=totalItem
+        totalPayment = "{:,.0f}".format(totalPayment)
+        total_quantity = sum(
+            item.quantity for item in CartItem.objects.filter(cart=cart))
+        print("Total quantity in cart:", total_quantity)
+        # Trả về JSON response
+        return JsonResponse({'quantity': quantity, 'total_quantity': total_quantity, 'total_price': total_price,'total_payment':totalPayment})
 
-    return redirect('detail-cart')
 
+def increaseProduct(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            product_id = data.get('productId')
+            product = Product.objects.get(id=product_id)
+            cookies = request.COOKIES
+            cartId = cookies.get("cartId")
+            cart = Cart.objects.get(cart_id=cartId)
+            cart_items = CartItem.objects.filter(cart=cart)
+            cart_item, created = CartItem.objects.get_or_create(
+                cart=cart, product=product)
+            if not created:
+                cart_item.quantity += 1
+            cart_item.save()
+            quantity = cart_item.quantity
+            total_price = "{:,.0f}".format(int(quantity*(cart_item.product.price)*(1-cart_item.product.discountPercentage/100)))
+            total_quantity = sum(
+            item.quantity for item in CartItem.objects.filter(cart=cart))
+            totalPayment=0
+            for item in cart_items:
+                totalItem=int(quantity*(item.product.price)*(1-item.product.discountPercentage/100))
+                totalPayment+=totalItem
+            totalPayment = "{:,.0f}".format(totalPayment)
+            total_quantity = sum(
+                item.quantity for item in CartItem.objects.filter(cart=cart))
+            print("Total quantity in cart:", total_quantity)
+            # Trả về JSON response
+            return JsonResponse({'quantity': quantity, 'total_quantity': total_quantity, 'total_price': total_price,'total_payment':totalPayment})
 
-def increaseProduct(request, pk):
-    cart_id = request.COOKIES.get('cartId')
-    cart = Cart.objects.get(cart_id=cart_id)
-    product = Product.objects.get(id=pk)
-    cart_items = CartItem.objects.get(cart=cart, product=product)
+        except Product.DoesNotExist:
+            return JsonResponse({'error': 'Product does not exist'}, status=404)
+        except Exception as e:
+            print("Error:", e)
+            return JsonResponse({'error': 'Something went wrong'}, status=500)
 
-    cart_items.quantity += 1
-    cart_items.save()
-
-    return redirect('detail-cart')
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 
 def deleteCart(request, pk):
@@ -339,10 +429,11 @@ def checkOut(request):
     pricePayment = totalPayment
     totalPayment = "{:,.0f}".format(totalPayment)
     context = {'products': products, 'totalPayment': totalPayment,
-               'quantityProducts': quantityProducts,'pageTitle': 'Trang thanh toán','quantityOrders': quantityOrder}
+               'quantityProducts': quantityProducts, 'pageTitle': 'Trang thanh toán', 'quantityOrders': quantityOrder}
     if request.method == "POST":
         if not request.user.is_authenticated:
-            return redirect('login')
+            messages.error("Bạn cần đăng nhập để thanh toán!")
+            return render(request, 'base/client/check-out.html', context)
         cart_id = request.COOKIES.get('cartId')
         cart = Cart.objects.get(cart_id=cart_id)
         orderObject = Order.objects.create(
@@ -352,6 +443,7 @@ def checkOut(request):
             phone=request.POST.get('phone'),
             address=request.POST.get('address'),
             pricePayment=pricePayment,
+            status="Processed"
         )
         for item in cart_items:
             orderItem, created = OrderItem.objects.get_or_create(
@@ -365,6 +457,7 @@ def checkOut(request):
 
 def detailOrder(request):
     cookies = request.COOKIES
+    user=request.user
     cartId = cookies.get("cartId")
     quantityProducts = getProductCart(cartId)
     if request.user.is_authenticated:
@@ -389,8 +482,8 @@ def detailOrder(request):
                     'product': item.product,
                     'quantity': item.quantity,
                     'totalPrice': totalPrice,
-                    'status':order.status,
-                    'created_at':order.created_at.strftime('%d/%m/%Y %H:%M:%S')
+                    'status': order.status,
+                    'created_at': order.created_at.strftime('%d/%m/%Y %H:%M:%S')
                 }
                 objectProducts['product'].price = "{:,.0f}".format(
                     objectProducts['product'].price)
@@ -404,13 +497,15 @@ def detailOrder(request):
                 'infoCustomer': infoObject,
                 'infoItems': infoItem,
                 'totalPayment': totalPayment,
+                'status':order.status
             }
             infoOrders.append(infoOrder)
+            print(infoOrders)
         context = {
             'quantityProducts': quantityProducts,
             'infoOrders': infoOrders,
             'quantityOrders': quantityOrder,
-            'pageTitle':'Trang chi tiết đơn hàng'}
+            'pageTitle': 'Trang chi tiết đơn hàng'}
     else:
         notification = "Giỏ hàng trống!"
         context = {'notification': notification,
@@ -427,16 +522,18 @@ def deleteComment(request, pk):
 # views.py
 
 
-
 def forgotPassword(request):
     if request.method == "POST":
         email = request.POST.get('email')  # Nhận email từ form
-        user = User.objects.filter(email=email).first()  # Tìm kiếm người dùng theo email
+        # Tìm kiếm người dùng theo email
+        user = User.objects.filter(email=email).first()
 
         if user is not None:
             send_reset_email(email)   # Gọi hàm gửi email
-            messages.success(request, 'Mã OTP đã được gửi vào email của bạn!')  # Thông báo thành công
+            # Thông báo thành công
+            messages.success(request, 'Mã OTP đã được gửi vào email của bạn!')
         else:
             messages.error(request, 'Không tồn tại email!')  # Thông báo lỗi
 
-    return render(request, 'base/client/forgot-password.html')  # Trả về template
+    # Trả về template
+    return render(request, 'base/client/forgot-password.html')

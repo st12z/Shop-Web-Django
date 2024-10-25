@@ -93,7 +93,7 @@ class Order(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)  # Ngày tạo đơn hàng
     updated_at = models.DateTimeField(auto_now=True)  # Ngày cập nhật đơn hàng
-    status=models.CharField(max_length=100,default="Đã đặt hàng")
+    status=models.CharField(max_length=100,default="Processed")
     def __str__(self):
         return f"Order {self.id} by {self.name}"
 

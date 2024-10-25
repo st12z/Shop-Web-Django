@@ -9,8 +9,8 @@
             <form method="POST">
               {% csrf_token %}
               <div class="form-group">
-                <label for="username">Username</label>
-                <input name="username" type="text" class="form-control" id="username" />
+                <label for="username">Họ và tên</label>
+                <input required name="username" type="text" class="form-control" id="username" />
               </div>
               <div class="form-group">
                 <label for="email">Email</label>
@@ -20,15 +20,27 @@
                   class="form-control"
                   id="exampleInputEmail1"
                   aria-describedby="emailHelp"
+                  required
                 />
               </div>
               <div class="form-group">
-                <label for="exampleInputPassword1">Password</label>
+                <label for="exampleInputPassword1">Mật khẩu</label>
                 <input
-                  name="password"
+                  name="password1"
                   type="password"
                   class="form-control"
                   id="exampleInputPassword1"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword2">Nhập lại mật khẩu</label>
+                <input
+                  name="password2"
+                  type="password"
+                  class="form-control"
+                  id="exampleInputPassword2"
+                  required
                 />
               </div>
               <a href="{%url 'login'%}" >Bạn đã có tài khoản ?</a></br>
