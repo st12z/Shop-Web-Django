@@ -1,61 +1,67 @@
 {%load static%}
-<div class="container mb-5 mt-5">
-  <div class="row">
-    <div class="col-3">
-      <a href="{% url 'home'%}">
-        <div class="inner-logo">
-          <img style="width:200px;height=auto" src="{% static 'client/images/logo-shop.png'%}" />
-        </div>
-      </a>
-    </div>
-    <div class="col-4">
-      <form class="form-search1">
-        <div class="input-group rounded">
-          <input default=""  type="search" name="keyword" class="form-control rounded" placeholder="Search" value="{{keyword}}" aria-label="Search" aria-describedby="search-addon" />
-          <button  class="input-group-text border-0" id="search-addon">
-            <i class="fas fa-search"></i>
-          </button>
-        </div>
-      </form>
-    </div>
-    <div class="col-1">
-      <a href="{%url 'detail-cart'%}">
-        <i class="fa-solid fa-cart-shopping"></i>
-        <span quantity-cart>({{quantityProducts}})</span>
-      </a>
-    </div>
-    <div class="col-1">
-      <a href="{%url 'detail-order'%}">
-        <i class="fa-solid fa-truck"></i>
-        {%if quantityOrders%}
-        ({{quantityOrders}})
-        {%endif%}
-      </a>
-    </div>
-    
-    {% if request.user.is_authenticated %}
+<div class="header" style="height:180px">
+  <div class="container mb-5 mt-5">
+    <div class="row">
+      <div class="col-3">
+        <a href="{% url 'home'%}">
+          <div class="inner-logo">
+            <img style="width:100px;height=auto" src="{% static 'client/images/logo-shop.png'%}" />
+          </div>
+        </a>
+      </div>
+      <div class="col-4">
+        <form class="form-search1">
+          <div class="input-group rounded">
+            <input default=""  type="search" name="keyword" class="form-control rounded" placeholder="Search" value="{{keyword}}" aria-label="Search" aria-describedby="search-addon" />
+            <button  class="input-group-text border-0" id="search-addon">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </form>
+      </div>
       <div class="col-1">
-        <a href="{%url 'logout'%}">
-          Đăng xuất
+        <a href="{%url 'detail-cart'%}">
+          <i class="fa-solid fa-cart-shopping"></i>
+          {%if quantityProducts %}
+          <span quantity-cart>({{quantityProducts}})</span>
+          {%else%}
+          <span quantity-cart></span>
+          {%endif%}
         </a>
       </div>
       <div class="col-1">
-        <img width="30px" src="{% static 'client/images/avatar.jpg'%}"/>
-        <p>{{request.user.username}}</p>
+        <a href="{%url 'detail-order'%}">
+          <i class="fa-solid fa-truck"></i>
+          {%if quantityOrders%}
+          ({{quantityOrders}})
+          {%endif%}
+        </a>
       </div>
-    {%else%}
-    <div class="col-1">
-      <a href="{%url 'login'%}">
-        Đăng nhập
-      </a>
-    </div> 
-    <div class="col-1">
-      <a href="{%url 'register'%}">
-        Đăng kí
-      </a>
+      
+      {% if request.user.is_authenticated %}
+        <div class="col-1">
+          <a href="{%url 'logout'%}">
+            Đăng xuất
+          </a>
+        </div>
+        <div class="col-1">
+          <img width="30px" src="{% static 'client/images/avatar.jpg'%}"/>
+          <p>{{request.user.username}}</p>
+        </div>
+      {%else%}
+      <div class="col-1">
+        <a href="{%url 'login'%}">
+          Đăng nhập
+        </a>
+      </div> 
+      <div class="col-1">
+        <a href="{%url 'register'%}">
+          Đăng kí
+        </a>
+      </div>
+      {%endif%}
     </div>
-    {%endif%}
-  </div>
-    
+      
+    </div>
   </div>
 </div>

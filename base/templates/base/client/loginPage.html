@@ -1,42 +1,38 @@
-{%extends 'client/main.html'%}{%block content%}
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <div class="inner-register">
-        <div class="card" style="width: 18rem">
-          <div class="card-body">
-            <h5 class="card-title">Đăng nhập</h5>
-            <form method="POST">
-              {% csrf_token %}
-              <div class="form-group">
-                <label for="email">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  class="form-control"
-                  id="exampleInputEmail1"
-                  aria-describedby="emailHelp"
-                  required
-                />
+{% extends 'client/main.html' %}
+{% block content %}
+  <div class="container">
+    <form method="POST">
+      {% csrf_token %}
+      <section class="vh-100" style="">
+        <div class="container py-5 h-100">
+          <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+              <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                <div class="card-body p-5 text-center">
+                  <h3 class="mb-5">Sign in</h3>
+
+                  <div data-mdb-input-init class="form-outline mb-4">
+                    <label class="form-label" for="typeEmailX-2">Email</label>
+                    <input name="email" type="email" id="typeEmailX-2" class="form-control form-control-lg" />
+                  </div>
+
+                  <div data-mdb-input-init class="form-outline mb-4">
+                    <label class="form-label" for="typePasswordX-2">Password</label>
+                    <input name="password" type="password" id="typePasswordX-2" class="form-control form-control-lg" />
+                  </div>
+
+                  <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+                  <a href="{%url 'register'%}" >Bạn chưa có tài khoản ?</a></br>
+                  <hr class="my-4" />
+
+                  <button data-mdb-button-init data-mdb-ripple-init class="btn btn-lg btn-block btn-primary" style="background-color: #dd4b39;" type="submit"><i class="fab fa-google me-2"></i> Sign in with google</button>
+                  <button data-mdb-button-init data-mdb-ripple-init class="btn btn-lg btn-block btn-primary mb-2" style="background-color: #3b5998;" type="submit"><i class="fab fa-facebook-f me-2"></i>Sign in with facebook</button>
+                </div>
               </div>
-              <div class="form-group">
-                <label for="exampleInputPassword1">Password</label>
-                <input
-                  name="password"
-                  type="password"
-                  class="form-control"
-                  id="exampleInputPassword1"
-                  required
-                />
-              </div>
-              <a href="{%url 'register'%}" >Bạn chưa có tài khoản ?</a></br>
-              <a href="{%url 'forgot-password'%}" >Quên mật khẩu ?</a></br>
-              <button type="submit" class="btn btn-primary">Đăng nhập</button>
-            </form>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </form>
   </div>
-</div>
-{%endblock%}
+{% endblock %}

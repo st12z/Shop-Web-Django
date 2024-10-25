@@ -1,6 +1,11 @@
 {% extends 'client/main.html'%}
 {% load static%} 
 {% block content%}
+<style>
+  .container{
+    margin-top:200px;
+  }
+</style>
 <div class="container">
   {% include 'base/client/category.html'%}
   {% include 'base/client/select-order.html' %}

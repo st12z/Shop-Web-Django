@@ -267,7 +267,6 @@ def addProductToCart(request):
             total_quantity = sum(
                 item.quantity for item in CartItem.objects.filter(cart=cart))
             print("Total quantity in cart:", total_quantity)
-
             # Trả về JSON response
             return JsonResponse({'total_quantity': total_quantity})
 

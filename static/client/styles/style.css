@@ -7,7 +7,10 @@ body{
 .card .inner-thumbnail {
   aspect-ratio: 4 / 3;
 }
-
+.header{
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 3px;
+}
 .inner-thumbnail img {
   width: auto;  /* Chiều rộng tự động để giữ tỷ lệ */
   height: 200px; /* Cố định chiều cao */
@@ -257,4 +260,103 @@ width: 0;
 #progressbar-2 li.active:before,
 #progressbar-2 li.active:after {
 background: #6520ff;
+}
+.header {
+  background-color: white; /* Màu nền cho header */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng cho header */
+  position: fixed; /* Giữ header cố định trên cùng */
+  top: 0; /* Đặt vị trí ở đầu trang */
+  left: 0;
+  right: 0;
+  z-index: 1000; /* Đảm bảo header nằm trên các phần tử khác */
+  padding: 5px 0; /* Giảm khoảng cách cho header */
+}
+
+.container {
+  max-width: 1200px; /* Giới hạn chiều rộng cho container */
+  margin: 0 auto; /* Căn giữa container */
+}
+
+.inner-logo img {
+  transition: transform 0.3s; /* Hiệu ứng chuyển động cho logo */
+}
+
+.inner-logo img:hover {
+  transform: scale(1.1); /* Phóng to logo khi hover */
+}
+
+.form-search1 {
+  margin: auto; /* Căn giữa form tìm kiếm */
+}
+
+.input-group {
+  width: 100%; /* Chiều rộng đầy đủ cho input */
+}
+
+.quantity-cart {
+  background-color: red; /* Màu nền cho số lượng giỏ hàng */
+  color: white; /* Màu chữ cho số lượng giỏ hàng */
+  border-radius: 50%; /* Tạo hình tròn cho số lượng giỏ hàng */
+  padding: 0 5px; /* Khoảng cách bên trong cho số lượng giỏ hàng */
+  position: absolute; /* Đặt vị trí tuyệt đối */
+  top: 0; /* Đặt ở trên cùng */
+  right: 0; /* Đặt bên phải */
+}
+
+.col-1 a {
+  display: flex; /* Hiển thị như flexbox */
+  align-items: center; /* Căn giữa theo chiều dọc */
+}
+
+.col-1 img {
+  border-radius: 50%; /* Làm tròn ảnh đại diện */
+  margin-right: 5px; /* Khoảng cách giữa ảnh và tên người dùng */
+}
+.inner-logo img {
+  height: 40px; /* Thay đổi chiều cao logo */
+  transition: transform 0.3s; /* Hiệu ứng chuyển động cho logo */
+}
+
+.form-search1 {
+  margin: auto; /* Căn giữa form tìm kiếm */
+  max-height: 40px; /* Giới hạn chiều cao của form tìm kiếm */
+}
+
+.input-group {
+  height: 100%; /* Đảm bảo chiều cao của input */
+}
+
+.col-1 img {
+  width: 25px; /* Giảm chiều rộng của ảnh đại diện */
+  height: 25px; /* Giảm chiều cao của ảnh đại diện */
+}
+.inner-logo img {
+  width: 100px; /* Chiều rộng mong muốn */
+  height: auto; /* Chiều cao tự động để giữ tỉ lệ */
+  object-fit: contain; /* Giữ nguyên tỉ lệ mà không bị cắt hoặc méo */
+}
+
+.carousel-inner img {
+  width: 100%; /* Đảm bảo ảnh chiếm đầy chiều rộng */
+  height: auto; /* Giữ tỉ lệ của ảnh */
+}
+
+.carousel {
+  height: 400px; /* Đặt chiều cao cố định cho carousel */
+  overflow: hidden; /* Ẩn các phần tử bên ngoài chiều cao của carousel */
+}
+
+.carousel-item {
+  height: 100%; /* Đặt chiều cao của item bằng chiều cao carousel */
+}
+
+.banner-content {
+  margin-top: 20px; /* Khoảng cách giữa carousel và nội dung dưới */
+  position: relative; /* Đặt vị trí tương đối cho nội dung dưới */
+  z-index: 1; /* Đảm bảo nội dung dưới nằm trên carousel */
+}
+
+.carousel {
+  position: relative; /* Đặt vị trí tương đối cho carousel */
+  z-index: 0; /* Đảm bảo carousel nằm dưới nội dung khác */
 }

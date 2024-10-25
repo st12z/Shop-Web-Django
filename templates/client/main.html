@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
-<!-- [if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif] -->
-<!-- [if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif] -->
-<!-- [if IE 8]> <html class="no-js lt-ie9"> <![endif] -->
-<!-- [if gt IE 8]> <html class="no-js"> <!--< -->
+
 <html>
   <head>
     <meta charset="utf-8" />
@@ -21,12 +18,13 @@
     {% include 'client/banner.html' %}
 
     {% include 'client/contact.html' %}
+    {% if messages %}
+      {% for message in messages %}
+        <span alert-message class="alert alert-danger">{{ message }} <span close-alert>X</span></span>
+      {% endfor %}
+    {% endif %}
     {% block content %}
-      {% if messages %}
-        {% for message in messages %}
-          <span alert-message class="alert alert-danger">{{ message }} <span close-alert>X</span></span>
-        {% endfor %}
-      {% endif %}
+
     {% endblock %}
     {% include 'client/footer.html' %}
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>

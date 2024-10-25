@@ -313,13 +313,27 @@ def orders(request):
         infoOrders.append(infoOrder)
     context={'pageTitle':'Quản lý đơn hàng','page':'orders','infoOrders': infoOrders,}
     return render(request,'base/admin/order.html',context)
-def editOrder(request,pk):
-    order=Order.objects.get(id=pk)
+from django.shortcuts import get_object_or_404, redirect, render
+from .models import Order
+
+def editOrder(request, pk):
+    order = get_object_or_404(Order, id=pk)
+    print(order)
     if request.user.is_authenticated:
-        if request.method=='POST':
-            status=request.POST.get('status')
-            order.status=status
-            order.save()
-            return redirect('orders')
-    context={'order':order}
-    return render(request,'base/admin/edit-order.html',context)
+        if request.method == 'POST':
+            status = request.POST.get('status')
+            print(status)
+            if status:  # Kiểm tra nếu status không phải là None hoặc chuỗi rỗng
+                order.status = status
+                order.save()
+                return redirect('orders')
+            else:
+                # Xử lý lỗi nếu status không hợp lệ
+                context = {
+                    'order': order,
+                    'error_message': 'Vui lòng chọn trạng thái hợp lệ.'
+                }
+                return render(request, 'base/admin/edit-order.html', context)
+
+    context = {'order': order}
+    return render(request, 'base/admin/edit-order.html', context)

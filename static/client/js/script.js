@@ -168,6 +168,7 @@ if (buttonProcess) {
 
 // button-alert
 const buttonAlert = document.querySelector("[close-alert]");
+console.log(buttonAlert);
 if (buttonAlert) {
   buttonAlert.addEventListener("click", () => {
     const notify = document.querySelector("[alert-message]");
