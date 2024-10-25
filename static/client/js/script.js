@@ -76,7 +76,10 @@ if (buttonCategory) {
   buttonCategory.forEach((button) => {
     button.addEventListener("click", () => {
       const category = button.getAttribute("button-category");
-      url.searchParams.set("category", category);
+      if (category != "") url.searchParams.set("category", category);
+      else {
+        url.searchParams.delete("category");
+      }
       url.searchParams.set("page", 1);
       url.searchParams.delete("keyword");
       window.location.href = url;
@@ -84,7 +87,6 @@ if (buttonCategory) {
   });
 }
 // end category
-
 
 // Add product to Cart
 const quantityCart = document.querySelector("[quantity-cart]");
@@ -120,7 +122,7 @@ if (buttonAddCart) {
 // Decrease Cart
 const buttonProcess = document.querySelectorAll("[button-process]");
 const tableCart = document.querySelector(".table-cart");
-const totalPayment=document.querySelector("[total-payment]");
+const totalPayment = document.querySelector("[total-payment]");
 
 if (buttonProcess) {
   buttonProcess.forEach((button) => {
@@ -128,7 +130,9 @@ if (buttonProcess) {
       const typeProcess = button.getAttribute("type-process");
       const productId = button.getAttribute("product-id");
       const record = tableCart.querySelector(`tr[record='${productId}']`);
-      const totalPrice=tableCart.querySelector(`[total-price='${productId}']`);
+      const totalPrice = tableCart.querySelector(
+        `[total-price='${productId}']`
+      );
       console.log(totalPrice);
       console.log(totalPayment);
       const inputQuantityCart = document.querySelector(
@@ -150,8 +154,8 @@ if (buttonProcess) {
           if (inputQuantityCart) {
             inputQuantityCart.value = data.quantity;
             quantityCart.innerHTML = `(${data.total_quantity})`;
-            totalPrice.innerHTML=data.total_price +"VNĐ",
-            totalPayment.innerHTML=`Tổng tiền thanh toán : ${data.total_payment} VNĐ`
+            (totalPrice.innerHTML = data.total_price + "VNĐ"),
+              (totalPayment.innerHTML = `Tổng tiền thanh toán : ${data.total_payment} VNĐ`);
           }
         })
         .catch((error) => {
@@ -163,16 +167,46 @@ if (buttonProcess) {
 // End Decrease cart
 
 // button-alert
-const buttonAlert=document.querySelector("[close-alert]");
-if(buttonAlert){
-  buttonAlert.addEventListener("click",()=>{
-    const notify=document.querySelector("[alert-message]");
+const buttonAlert = document.querySelector("[close-alert]");
+if (buttonAlert) {
+  buttonAlert.addEventListener("click", () => {
+    const notify = document.querySelector("[alert-message]");
     notify.classList.add("hidden");
-  })
+  });
 }
 
 // end button-alert
 
 // button-cancel-order
+const buttonCancel = document.querySelectorAll("[button-cancel]");
+if (buttonCancel) {
+  buttonCancel.forEach((button) => {
+    button.addEventListener("click", () => {
+      const orderId = button.getAttribute("button-cancel");
+      const buttonOrder = document.querySelector(`[button-order="${orderId}"]`);
+      console.log(orderId);
+      fetch(`http://127.0.0.1:8000/home/cancel-order/${orderId}/`, {
+        method: "DELETE",
+        headers: {
+          "X-CSRFToken": csrfToken,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.code == 200) {
+            if (buttonCancel) {
+              button.innerHTML = "Đã hủy đơn hàng";
+              if (buttonOrder) buttonOrder.remove();
+              button.setAttribute("disabled", true);
+            }
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    });
+  });
+}
 
 // end-button-cancel-order

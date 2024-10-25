@@ -119,6 +119,7 @@ def home(request):
     sort_order = '' if sortValue == 'asc' else '-'
     priceOrder = request.GET.get('priceOrder', '')
     category = request.GET.get('category', '')
+    stringAll=""
     quantityProducts = getProductCart(cartId)
     quantityOrder = 0
     if request.user.is_authenticated:
@@ -184,6 +185,7 @@ def home(request):
         'quantityOrders': quantityOrder,
         'pageTitle': 'Trang chủ',
         'categories': categories,
+        'stringAll':stringAll,
         'categoryOption': category,
     }
     # Render template và thiết lập cookie
@@ -443,7 +445,8 @@ def checkOut(request):
             phone=request.POST.get('phone'),
             address=request.POST.get('address'),
             pricePayment=pricePayment,
-            status="Processed"
+            status="Processed",
+            order_id=generateString(10)
         )
         for item in cart_items:
             orderItem, created = OrderItem.objects.get_or_create(
@@ -497,7 +500,8 @@ def detailOrder(request):
                 'infoCustomer': infoObject,
                 'infoItems': infoItem,
                 'totalPayment': totalPayment,
-                'status':order.status
+                'status':order.status,
+                'order_id':order.order_id
             }
             infoOrders.append(infoOrder)
             print(infoOrders)
@@ -511,7 +515,15 @@ def detailOrder(request):
         context = {'notification': notification,
                    'quantityProducts': quantityProducts}
     return render(request, 'base/client/detail-order.html', context)
-
+def cancelOrder(request,pk):
+    if request.method=="DELETE":
+        orderId = pk
+        order=Order.objects.get(order_id=orderId)
+        orderItem=OrderItem.objects.filter(order=order)
+        order.delete()
+        orderItem.delete()
+        messages.error(request,"Đã xóa thành công")
+        return JsonResponse({"message":"Hủy thành công",'code':200})
 
 def deleteComment(request, pk):
     comment = Comment.objects.get(id=pk)
@@ -537,3 +549,7 @@ def forgotPassword(request):
 
     # Trả về template
     return render(request, 'base/client/forgot-password.html')
+
+
+        
+        

@@ -16,6 +16,7 @@ urlpatterns = [
     path('logout',viewsClient.logoutUser,name='logout'),
     path('delete-comment/<str:pk>/',viewsClient.deleteComment,name='delete-comment'),
     path('forgot-password',viewsClient.forgotPassword,name='forgot-password'),
+    path('cancel-order/<str:pk>/',viewsClient.cancelOrder,name='cancel-order'),
     # end url client
 
 ]

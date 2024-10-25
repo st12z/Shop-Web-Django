@@ -83,6 +83,8 @@ class CartItem(models.Model):
 
 
 class Order(models.Model):
+    order_id = models.CharField(
+        max_length=255, unique=True,default='')  # Trường cho Cart ID
     name = models.CharField(max_length=200)  # Tên người đặt hàng
     phone = models.CharField(max_length=15)  # Số điện thoại
     address = models.CharField(max_length=255)  # Địa chỉ giao hàng
