@@ -14,6 +14,7 @@ from helper.sendEmail import send_reset_email
 from django.http import JsonResponse
 import json
 import locale
+from django.core.files.storage import FileSystemStorage
 # Create your views here.
 
 
@@ -266,9 +267,9 @@ def addProductToCart(request):
             # Tính tổng số lượng sản phẩm trong giỏ hàng
             total_quantity = sum(
                 item.quantity for item in CartItem.objects.filter(cart=cart))
-            print("Total quantity in cart:", total_quantity)
+            
             # Trả về JSON response
-            return JsonResponse({'total_quantity': total_quantity})
+            return JsonResponse({'total_quantity': total_quantity,'messages':"Bạn đã thêm vào giỏ hàng!"})
 
         except Product.DoesNotExist:
             return JsonResponse({'error': 'Product does not exist'}, status=404)
@@ -433,7 +434,7 @@ def checkOut(request):
                'quantityProducts': quantityProducts, 'pageTitle': 'Trang thanh toán', 'quantityOrders': quantityOrder}
     if request.method == "POST":
         if not request.user.is_authenticated:
-            messages.error("Bạn cần đăng nhập để thanh toán!")
+            messages.error(request,"Bạn cần đăng nhập để thanh toán!")
             return render(request, 'base/client/check-out.html', context)
         cart_id = request.COOKIES.get('cartId')
         cart = Cart.objects.get(cart_id=cart_id)
@@ -549,6 +550,75 @@ def forgotPassword(request):
     # Trả về template
     return render(request, 'base/client/forgot-password.html')
 
+from django.core.files.storage import FileSystemStorage
+from django.shortcuts import redirect, render
 
+def detailUser(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            user = request.user
+            # Lấy email và username từ request.POST, nếu có
+            email = request.POST.get('email')
+            username = request.POST.get('username')
+            
+            if email:
+                user.email = email
+            if username:
+                user.username = username
+            
+            uploaded_file = request.FILES.get('file')  # Lấy tệp tin từ request.FILES
+            
+            # Kiểm tra xem tệp tin có được tải lên không
+            if uploaded_file:
+                # Sử dụng FileSystemStorage để lưu tệp
+                fs = FileSystemStorage(location='static/client/images')
+                # Lưu tệp và lấy tên tệp
+                filename = fs.save(uploaded_file.name, uploaded_file)
+                # Tạo đường dẫn tương đối cho thumbnail
+                thumbnail_path = f"images/{filename}"
+                user.avatar = thumbnail_path
+
+            # Lưu lại các thay đổi của user
+            user.save()
+            return redirect("detail-user")
+    
+    # Render trang chi tiết người dùng
+    context = {"user": request.user}
+    return render(request, 'base/client/detail-user.html', context)
+
+
+def editPass(request):
+    
+    from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.hashers import check_password
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+def editPass(request):
+    user = request.user  # Người dùng hiện tại
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            current_password = request.POST.get('passwordC')
+            new_password1 = request.POST.get('passwordN1')
+            new_password2 = request.POST.get('passwordN2')
+
+            if not check_password(current_password, user.password):
+                messages.error(request, "Mật khẩu hiện tại không chính xác.")
+                return redirect("edit-password")  # Trở lại trang đổi mật khẩu
+            if new_password1 != new_password2:
+                messages.error(request, "Mật khẩu mới không khớp.")
+                return redirect("edit-pass")
+
+            if len(new_password1) < 8:
+                messages.error(request, "Mật khẩu mới phải có ít nhất 8 ký tự.")
+                return redirect("edit-pass")
+
+            user.set_password(new_password1)
+            user.save()
+            messages.success(request, "Mật khẩu đã được thay đổi thành công.")
+            return redirect("home")  # Chuyển hướng về trang chi tiết người dùng
+
+    context = {"user": request.user}
+    return render(request, 'base/client/edit-password.html', context)
         
         

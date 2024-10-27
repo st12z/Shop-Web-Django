@@ -40,13 +40,17 @@
       
       {% if request.user.is_authenticated %}
         <div class="col-1">
-          <a href="{%url 'logout'%}">
-            Đăng xuất
-          </a>
-        </div>
-        <div class="col-1">
-          <img width="30px" src="{% static 'client/images/avatar.jpg'%}"/>
-          <p>{{request.user.username}}</p>
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img width="30px" src="{% static 'client/'%}{{request.user.avatar}}"/>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="#"><span class="btn btn-info">{{request.user.username}}</span></a>
+              <a class="dropdown-item" href="{%url 'edit-pass'%}">Thay đổi mật khẩu</a>
+              <a class="dropdown-item" href="{%url 'detail-user'%}">Chi tiết tài khoản</a>
+              <a class="dropdown-item" href="{%url 'logout'%}">Đăng xuất</a>
+            </div>
+          </div>
         </div>
       {%else%}
       <div class="col-1">

@@ -87,8 +87,21 @@ if (buttonCategory) {
   });
 }
 // end category
+const closeAlert=()=>{
+  const buttonAlert = document.querySelector("[close-alert]");
+  if (buttonAlert) {
+    buttonAlert.addEventListener("click", () => {
+      
+      const notify = document.querySelector("[alert-message]");
+      console.log(buttonAlert);
+      console.log(notify);
+      notify.classList.add("hidden");
 
+    });
+  }
+}
 // Add product to Cart
+const body=document.querySelector("body");
 const quantityCart = document.querySelector("[quantity-cart]");
 const buttonAddCart = document.querySelectorAll("[button-add-cart]");
 console.log(quantityCart);
@@ -109,7 +122,22 @@ if (buttonAddCart) {
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
-          if (quantityCart) quantityCart.innerHTML = `(${data.total_quantity})`;
+          if (quantityCart){
+            quantityCart.innerHTML = `(${data.total_quantity})`;
+            if(data.messages){
+              const alertMess=document.querySelector("[alert-message]");
+              if(alertMess){
+                body.removeChild(alertMess);
+              }
+              const spanMess=document.createElement("span");
+              spanMess.classList.add("alert");
+              spanMess.setAttribute("alert-message","");
+              spanMess.classList.add("alert-danger");
+              spanMess.innerHTML=`${data.messages} <span close-alert>X</span>`;
+              body.appendChild(spanMess);
+              closeAlert();
+            }
+          }
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -167,14 +195,9 @@ if (buttonProcess) {
 // End Decrease cart
 
 // button-alert
-const buttonAlert = document.querySelector("[close-alert]");
-console.log(buttonAlert);
-if (buttonAlert) {
-  buttonAlert.addEventListener("click", () => {
-    const notify = document.querySelector("[alert-message]");
-    notify.classList.add("hidden");
-  });
-}
+
+closeAlert();
+
 
 // end button-alert
 
@@ -211,3 +234,16 @@ if (buttonCancel) {
 }
 
 // end-button-cancel-order
+const inputUpload = document.querySelector("#imageUpload");
+if (inputUpload) {
+  const imgUpload = document.querySelector("#image-preview");
+
+  inputUpload.addEventListener("change", (e) => {
+    // Kiểm tra xem có file nào được chọn
+    if (e.target.files && e.target.files[0]) {
+      imgUpload.src = URL.createObjectURL(e.target.files[0]);
+      console.log(imgUpload.src);
+      imgUpload.style.display = "block"; // Hiển thị ảnh sau khi chọn
+    }
+  });
+}

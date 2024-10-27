@@ -143,8 +143,9 @@ table tr {
   height: 50px;
   object-fit: cover;
 }
+
 .alert.alert-danger{
-  position: absolute;
+  position: fixed;
   right: 100px;
   top: 500px;
 }
@@ -359,4 +360,7 @@ background: #6520ff;
 .carousel {
   position: relative; /* Đặt vị trí tương đối cho carousel */
   z-index: 0; /* Đảm bảo carousel nằm dưới nội dung khác */
+}
+[banner]{
+  margin-top:200px;
 }

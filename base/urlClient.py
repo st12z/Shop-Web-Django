@@ -17,6 +17,8 @@ urlpatterns = [
     path('delete-comment/<str:pk>/',viewsClient.deleteComment,name='delete-comment'),
     path('forgot-password',viewsClient.forgotPassword,name='forgot-password'),
     path('cancel-order/<str:pk>/',viewsClient.cancelOrder,name='cancel-order'),
+    path('detail-user/',viewsClient.detailUser,name='detail-user'),
+    path('edit-pass/',viewsClient.editPass,name='edit-pass'),
     # end url client
 
 ]

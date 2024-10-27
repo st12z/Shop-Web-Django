@@ -16,11 +16,12 @@
   <body data-csrf-token="{{ csrf_token }}">
     {% include 'client/header.html' %}
     {% include 'client/banner.html' %}
-
     {% include 'client/contact.html' %}
     {% if messages %}
       {% for message in messages %}
-        <span alert-message class="alert alert-danger">{{ message }} <span close-alert>X</span></span>
+        
+          <span alert-message class="alert alert-danger">{{ message }} <span close-alert>X</span></span>
+        
       {% endfor %}
     {% endif %}
     {% block content %}
