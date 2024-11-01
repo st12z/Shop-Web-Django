@@ -29,14 +29,16 @@ def registerPage(request):
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
         # Kiểm tra xem username có rỗng không
-        if len(password1) < 8 or len(password2) < 8:
-            messages.error(request, 'Mật khẩu phải có ít nhất 8 ký tự.')
-            return render(request, 'base/client/registerPage.html')
         if not username:
             messages.error(request, 'Tên đăng nhập không được để trống!')
         # Kiểm tra nếu email đã tồn tại
         elif User.objects.filter(email=email).exists():
             messages.error(request, 'Email đã tồn tại!')
+        elif not password1 or not password2:
+            messages.error(request, 'Vui lòng nhập mật khẩu.')
+        elif len(password1) < 8 or len(password2) < 8:
+            messages.error(request, 'Mật khẩu phải có ít nhất 8 ký tự.')
+            return render(request, 'base/client/registerPage.html')
         elif password1!=password2:
             messages.error(request, 'Nhập lại mật khảu!')
         else:
@@ -343,8 +345,9 @@ def decreaseProduct(request):
         item.quantity for item in CartItem.objects.filter(cart=cart))
         totalPayment=0
         for item in cart_items:
-            totalItem=int(quantity*(item.product.price)*(1-item.product.discountPercentage/100))
+            totalItem=int(item.quantity*(item.product.price)*(1-item.product.discountPercentage/100))
             totalPayment+=totalItem
+        print(totalPayment)
         totalPayment = "{:,.0f}".format(totalPayment)
         total_quantity = sum(
             item.quantity for item in CartItem.objects.filter(cart=cart))
@@ -374,7 +377,7 @@ def increaseProduct(request):
             item.quantity for item in CartItem.objects.filter(cart=cart))
             totalPayment=0
             for item in cart_items:
-                totalItem=int(quantity*(item.product.price)*(1-item.product.discountPercentage/100))
+                totalItem=int(item.quantity*(item.product.price)*(1-item.product.discountPercentage/100))
                 totalPayment+=totalItem
             totalPayment = "{:,.0f}".format(totalPayment)
             total_quantity = sum(

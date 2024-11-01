@@ -24,7 +24,7 @@
                 <td>{{ forloop.counter }}</td>
                 <td>{{item.product.name}}</td>
                 <td>
-                  <img src="{% static 'client/' %}{{item.product.thumbnail}}" alt="Ảnh" />
+                  <img style="height:100px" src="{% static 'client/' %}{{item.product.thumbnail}}" alt="Ảnh" />
                 </td>
                 <td>{{item.product.price}} VNĐ</td>
                 <td>{{item.product.discountPercentage}}%</td>
@@ -50,15 +50,11 @@
               <div class="card card-stepper" style="border-radius: 16px;">        
                 <div class="card-body p-5">
                   <div class="d-flex justify-content-between align-items-center mb-5">
-                    <div>
-                      <h5 class="mb-0">
-                        Đơn hàng
+                    <div class="inner-order">
                         <button button-order="{{infoOrder.order_id}}" class="btn btn-secondary" disabled>Đã đặt hàng</button>
                         {% if infoOrder.status == 'Processed' %}
                           <button class="btn btn-primary" button-cancel="{{infoOrder.order_id}}">Hủy đơn hàng</button>
                         {%endif%}
-                      </h5>
-                      
                     </div>
                   </div>
                   <ul id="progressbar-2" class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2">

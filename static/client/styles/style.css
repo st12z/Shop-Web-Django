@@ -1,46 +1,60 @@
-body{
+body {
   position: relative;
 }
-.inner-logo img{
+
+.inner-logo img {
   width: 50px;
 }
+
 .card .inner-thumbnail {
   aspect-ratio: 4 / 3;
 }
-.header{
+
+.header {
   border-bottom: 1px solid #ddd;
   margin-bottom: 3px;
 }
+
 .inner-thumbnail img {
-  width: auto;  /* Chiều rộng tự động để giữ tỷ lệ */
-  height: 200px; /* Cố định chiều cao */
+  width: auto;
+  /* Chiều rộng tự động để giữ tỷ lệ */
+  height: 200px;
+  /* Cố định chiều cao */
   object-fit: cover;
 }
-.detail.inner-image{
+
+.detail.inner-image {
   border: 1px solid #ddd;
   border-radius: 5px;
 }
-.detail.inner-image img{
+
+.detail.inner-image img {
   max-width: 100%;
   height: auto;
 }
-.card.card-product{
+
+.card.card-product {
   position: relative;
 }
-.card span{
+
+.card span {
   position: absolute;
   right: 10px;
-  top:10px;
-}
-.row{
-  align-items: center;
-}
-table img {
-  width: 100px;
-  height: auto;
+  top: 10px;
 }
 
-table th, table td {
+.row {
+  align-items: center;
+}
+
+table img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+table th,
+table td {
   width: 150px;
   text-align: center;
 }
@@ -48,49 +62,64 @@ table th, table td {
 table tr {
   min-height: 50px;
 }
-.table-cart{
-  border:1px solid #ddd;
+
+.table-cart {
+  border: 1px solid #ddd;
 }
-.table-cart tr{
-  border:1px solid #ddd;
+
+.table-cart tr {
+  border: 1px solid #ddd;
 }
-.table-cart td{
-  border:1px solid #ddd;
+
+.table-cart td {
+  border: 1px solid #ddd;
 }
-.table-cart th{
-  border:1px solid #ddd;
+
+.table-cart th {
+  border: 1px solid #ddd;
 }
-.inner-quantity{
-  display:flex;
+
+.inner-quantity {
+  display: flex;
   justify-content: center;
   align-items: center;
 }
-.inner-register{
+
+.inner-register {
   display: flex;
   justify-content: center;
 }
-.price-old{
+
+.price-old {
   text-decoration: line-through;
 }
+
 .footer {
-  padding: 20px 0; /* Thêm padding cho phần footer */
+  padding: 20px 0;
+  /* Thêm padding cho phần footer */
 }
 
 .footer .container {
   border-radius: 10px;
   background-color: #00483D;
-  padding: 20px; /* Thêm padding bên trong container */
+  padding: 20px;
+  /* Thêm padding bên trong container */
 }
 
 .footer .row {
-  display: flex; /* Đảm bảo sử dụng flexbox */
-  align-items: flex-start; /* Căn giữa các cột */
-  justify-content: center; /* Căn giữa hàng */
+  display: flex;
+  /* Đảm bảo sử dụng flexbox */
+  align-items: flex-start;
+  /* Căn giữa các cột */
+  justify-content: center;
+  /* Căn giữa hàng */
 }
 
 .footer .col-3 {
-  flex: 1; /* Để mỗi cột có chiều rộng bằng nhau */
-  padding: 10px; /* Thêm padding cho mỗi cột */
+  flex: 1;
+  /* Để mỗi cột có chiều rộng bằng nhau */
+  padding: 10px;
+  /* Thêm padding cho mỗi cột */
 }
 
 .footer .col-3 div {
@@ -100,18 +129,23 @@ table tr {
 .footer ul {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Chỉnh sửa để các mục căn thẳng về bên trái */
+  align-items: flex-start;
+  /* Chỉnh sửa để các mục căn thẳng về bên trái */
   list-style: none;
-  margin: 0; /* Đặt margin là 0 để loại bỏ khoảng cách mặc định */
-  padding: 0; /* Đặt padding là 0 để loại bỏ khoảng cách mặc định */
+  margin: 0;
+  /* Đặt margin là 0 để loại bỏ khoảng cách mặc định */
+  padding: 0;
+  /* Đặt padding là 0 để loại bỏ khoảng cách mặc định */
 }
 
 .footer ul li {
   font-size: 10px;
   font-weight: 600;
   color: white;
-  margin: 0; /* Đặt margin là 0 để không có khoảng cách giữa các mục */
-  padding: 5px 0; /* Thêm padding nếu bạn muốn khoảng cách giữa các mục */
+  margin: 0;
+  /* Đặt margin là 0 để không có khoảng cách giữa các mục */
+  padding: 5px 0;
+  /* Thêm padding nếu bạn muốn khoảng cách giữa các mục */
 }
 
 
@@ -119,18 +153,22 @@ table tr {
   font-size: 15px;
   font-weight: 600;
   color: white;
-  margin-bottom: 10px; /* Thêm khoảng cách dưới tiêu đề */
+  margin-bottom: 10px;
+  /* Thêm khoảng cách dưới tiêu đề */
 }
 
 
 
 .footer img {
-  width: 50px; /* Đặt chiều rộng cho hình ảnh thanh toán */
-  height: auto; /* Đảm bảo chiều cao tự động để giữ tỷ lệ */
-  margin: 5px 0; /* Thêm khoảng cách cho các hình ảnh */
+  width: 50px;
+  /* Đặt chiều rộng cho hình ảnh thanh toán */
+  height: auto;
+  /* Đảm bảo chiều cao tự động để giữ tỷ lệ */
+  margin: 5px 0;
+  /* Thêm khoảng cách cho các hình ảnh */
 }
 
-.contact ul{
+.contact ul {
   display: flex;
   flex-direction: column;
   list-style: none;
@@ -138,21 +176,24 @@ table tr {
   left: 0px;
   top: 400px;
 }
-.contact li img{
+
+.contact li img {
   width: 50px;
   height: 50px;
   object-fit: cover;
 }
 
-.alert.alert-danger{
+.alert.alert-danger {
   position: fixed;
   right: 100px;
   top: 500px;
 }
-.alert.alert-danger.hidden{
-  display:none;
+
+.alert.alert-danger.hidden {
+  display: none;
 }
-[close-alert]{
+
+[close-alert] {
   font-weight: 500;
   display: inline-flex;
   background-color: #ddd;
@@ -162,205 +203,544 @@ table tr {
   justify-content: center;
   cursor: pointer;
 }
+
 .card-stepper {
   z-index: 0
-  }
-  
+}
+
 #progressbar-2 {
-color: #455A64;
+  color: #455A64;
 }
 
 #progressbar-2 li {
-list-style-type: none;
-font-size: 13px;
-width: 33.33%;
-float: left;
-position: relative;
+  list-style-type: none;
+  font-size: 13px;
+  width: 33.33%;
+  float: left;
+  position: relative;
 }
 
 #progressbar-2 #step1:before {
-content: '\f058';
-font-family: "Font Awesome 5 Free";
-color: #fff;
-width: 37px;
-margin-left: 0px;
-padding-left: 0px;
+  content: '\f058';
+  font-family: "Font Awesome 5 Free";
+  color: #fff;
+  width: 37px;
+  margin-left: 0px;
+  padding-left: 0px;
 }
 
 #progressbar-2 #step2:before {
-content: '\f058';
-font-family: "Font Awesome 5 Free";
-color: #fff;
-width: 37px;
+  content: '\f058';
+  font-family: "Font Awesome 5 Free";
+  color: #fff;
+  width: 37px;
 }
 
 #progressbar-2 #step3:before {
-content: '\f058';
-font-family: "Font Awesome 5 Free";
-color: #fff;
-width: 37px;
-margin-right: 0;
-text-align: center;
+  content: '\f058';
+  font-family: "Font Awesome 5 Free";
+  color: #fff;
+  width: 37px;
+  margin-right: 0;
+  text-align: center;
 }
 
 #progressbar-2 #step4:before {
-content: '\f111';
-font-family: "Font Awesome 5 Free";
-color: #fff;
-width: 37px;
-margin-right: 0;
-text-align: center;
+  content: '\f111';
+  font-family: "Font Awesome 5 Free";
+  color: #fff;
+  width: 37px;
+  margin-right: 0;
+  text-align: center;
 }
 
 #progressbar-2 li:before {
-line-height: 37px;
-display: block;
-font-size: 12px;
-background: #c5cae9;
-border-radius: 50%;
+  line-height: 37px;
+  display: block;
+  font-size: 12px;
+  background: #c5cae9;
+  border-radius: 50%;
 }
 
 #progressbar-2 li:after {
-content: '';
-width: 100%;
-height: 10px;
-background: #c5cae9;
-position: absolute;
-left: 0%;
-right: 0%;
-top: 15px;
-z-index: -1;
+  content: '';
+  width: 100%;
+  height: 10px;
+  background: #c5cae9;
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: 15px;
+  z-index: -1;
 }
 
 #progressbar-2 li:nth-child(1):after {
-left: 1%;
-width: 100%
+  left: 1%;
+  width: 100%
 }
 
 #progressbar-2 li:nth-child(2):after {
-left: 1%;
-width: 100%;
+  left: 1%;
+  width: 100%;
 }
 
 #progressbar-2 li:nth-child(3):after {
-left: 1%;
-width: 100%;
-background: #c5cae9 !important;
+  left: 1%;
+  width: 100%;
+  background: #c5cae9 !important;
 }
 
 #progressbar-2 li:nth-child(4) {
-left: 0;
-width: 37px;
+  left: 0;
+  width: 37px;
 }
 
 #progressbar-2 li:nth-child(4):after {
-left: 0;
-width: 0;
+  left: 0;
+  width: 0;
 }
 
 #progressbar-2 li.active:before,
 #progressbar-2 li.active:after {
-background: #6520ff;
+  background: #6520ff;
 }
+
 .header {
-  background-color: white; /* Màu nền cho header */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng cho header */
-  position: fixed; /* Giữ header cố định trên cùng */
-  top: 0; /* Đặt vị trí ở đầu trang */
+  background-color: white;
+  /* Màu nền cho header */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Đổ bóng cho header */
+  position: fixed;
+  /* Giữ header cố định trên cùng */
+  top: 0;
+  /* Đặt vị trí ở đầu trang */
   left: 0;
   right: 0;
-  z-index: 1000; /* Đảm bảo header nằm trên các phần tử khác */
-  padding: 5px 0; /* Giảm khoảng cách cho header */
+  z-index: 1000;
+  /* Đảm bảo header nằm trên các phần tử khác */
+  padding: 5px 0;
+  /* Giảm khoảng cách cho header */
 }
 
 .container {
-  max-width: 1200px; /* Giới hạn chiều rộng cho container */
-  margin: 0 auto; /* Căn giữa container */
+  max-width: 1200px;
+  /* Giới hạn chiều rộng cho container */
+  margin: 0 auto;
+  /* Căn giữa container */
 }
 
 .inner-logo img {
-  transition: transform 0.3s; /* Hiệu ứng chuyển động cho logo */
+  transition: transform 0.3s;
+  /* Hiệu ứng chuyển động cho logo */
 }
 
 .inner-logo img:hover {
-  transform: scale(1.1); /* Phóng to logo khi hover */
+  transform: scale(1.1);
+  /* Phóng to logo khi hover */
 }
 
 .form-search1 {
-  margin: auto; /* Căn giữa form tìm kiếm */
+  margin: auto;
+  /* Căn giữa form tìm kiếm */
 }
 
 .input-group {
-  width: 100%; /* Chiều rộng đầy đủ cho input */
+  width: 100%;
+  /* Chiều rộng đầy đủ cho input */
 }
 
 .quantity-cart {
-  background-color: red; /* Màu nền cho số lượng giỏ hàng */
-  color: white; /* Màu chữ cho số lượng giỏ hàng */
-  border-radius: 50%; /* Tạo hình tròn cho số lượng giỏ hàng */
-  padding: 0 5px; /* Khoảng cách bên trong cho số lượng giỏ hàng */
-  position: absolute; /* Đặt vị trí tuyệt đối */
-  top: 0; /* Đặt ở trên cùng */
-  right: 0; /* Đặt bên phải */
+  background-color: red;
+  /* Màu nền cho số lượng giỏ hàng */
+  color: white;
+  /* Màu chữ cho số lượng giỏ hàng */
+  border-radius: 50%;
+  /* Tạo hình tròn cho số lượng giỏ hàng */
+  padding: 0 5px;
+  /* Khoảng cách bên trong cho số lượng giỏ hàng */
+  position: absolute;
+  /* Đặt vị trí tuyệt đối */
+  top: 0;
+  /* Đặt ở trên cùng */
+  right: 0;
+  /* Đặt bên phải */
 }
 
 .col-1 a {
-  display: flex; /* Hiển thị như flexbox */
-  align-items: center; /* Căn giữa theo chiều dọc */
+  display: flex;
+  /* Hiển thị như flexbox */
+  align-items: center;
+  /* Căn giữa theo chiều dọc */
 }
 
 .col-1 img {
-  border-radius: 50%; /* Làm tròn ảnh đại diện */
-  margin-right: 5px; /* Khoảng cách giữa ảnh và tên người dùng */
+  border-radius: 50%;
+  /* Làm tròn ảnh đại diện */
+  margin-right: 5px;
+  /* Khoảng cách giữa ảnh và tên người dùng */
 }
+
 .inner-logo img {
-  height: 40px; /* Thay đổi chiều cao logo */
-  transition: transform 0.3s; /* Hiệu ứng chuyển động cho logo */
+  height: 40px;
+  /* Thay đổi chiều cao logo */
+  transition: transform 0.3s;
+  /* Hiệu ứng chuyển động cho logo */
 }
 
 .form-search1 {
-  margin: auto; /* Căn giữa form tìm kiếm */
-  max-height: 40px; /* Giới hạn chiều cao của form tìm kiếm */
+  margin: auto;
+  /* Căn giữa form tìm kiếm */
+  max-height: 40px;
+  /* Giới hạn chiều cao của form tìm kiếm */
 }
 
 .input-group {
-  height: 100%; /* Đảm bảo chiều cao của input */
+  height: 100%;
+  /* Đảm bảo chiều cao của input */
 }
 
 .col-1 img {
-  width: 25px; /* Giảm chiều rộng của ảnh đại diện */
-  height: 25px; /* Giảm chiều cao của ảnh đại diện */
+  width: 25px;
+  /* Giảm chiều rộng của ảnh đại diện */
+  height: 25px;
+  /* Giảm chiều cao của ảnh đại diện */
 }
+
 .inner-logo img {
-  width: 100px; /* Chiều rộng mong muốn */
-  height: auto; /* Chiều cao tự động để giữ tỉ lệ */
-  object-fit: contain; /* Giữ nguyên tỉ lệ mà không bị cắt hoặc méo */
+  width: 100px;
+  /* Chiều rộng mong muốn */
+  height: auto;
+  /* Chiều cao tự động để giữ tỉ lệ */
+  object-fit: contain;
+  /* Giữ nguyên tỉ lệ mà không bị cắt hoặc méo */
 }
 
 .carousel-inner img {
-  width: 100%; /* Đảm bảo ảnh chiếm đầy chiều rộng */
-  height: auto; /* Giữ tỉ lệ của ảnh */
+  width: 100%;
+  /* Đảm bảo ảnh chiếm đầy chiều rộng */
+  height: auto;
+  /* Giữ tỉ lệ của ảnh */
 }
 
 .carousel {
-  height: 400px; /* Đặt chiều cao cố định cho carousel */
-  overflow: hidden; /* Ẩn các phần tử bên ngoài chiều cao của carousel */
+  height: 400px;
+  /* Đặt chiều cao cố định cho carousel */
+  overflow: hidden;
+  /* Ẩn các phần tử bên ngoài chiều cao của carousel */
 }
 
 .carousel-item {
-  height: 100%; /* Đặt chiều cao của item bằng chiều cao carousel */
+  height: 100%;
+  /* Đặt chiều cao của item bằng chiều cao carousel */
 }
 
 .banner-content {
-  margin-top: 20px; /* Khoảng cách giữa carousel và nội dung dưới */
-  position: relative; /* Đặt vị trí tương đối cho nội dung dưới */
-  z-index: 1; /* Đảm bảo nội dung dưới nằm trên carousel */
+  margin-top: 20px;
+  /* Khoảng cách giữa carousel và nội dung dưới */
+  position: relative;
+  /* Đặt vị trí tương đối cho nội dung dưới */
+  z-index: 1;
+  /* Đảm bảo nội dung dưới nằm trên carousel */
 }
 
 .carousel {
-  position: relative; /* Đặt vị trí tương đối cho carousel */
-  z-index: 0; /* Đảm bảo carousel nằm dưới nội dung khác */
+  position: relative;
+  /* Đặt vị trí tương đối cho carousel */
+  z-index: 0;
+  /* Đảm bảo carousel nằm dưới nội dung khác */
 }
-[banner]{
-  margin-top:200px;
+
+[banner] {
+  margin-top: 200px;
+}
+
+/* Đặt nền và kích thước cho header */
+.header {
+  background-color: #f8f9fa;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.header .container {
+  max-width: 1200px;
+}
+
+.inner-logo img {
+  width: 100px;
+  height: auto;
+}
+
+.form-search1 {
+  width: 100%;
+}
+
+.input-group {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.input-group .form-control {
+  border-radius: 20px 0 0 20px;
+  border-right: none;
+}
+
+.input-group .input-group-text {
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 0 20px 20px 0;
+}
+
+.input-group .input-group-text i {
+  font-size: 1.2rem;
+}
+
+/* Định dạng icon và số lượng sản phẩm trong giỏ hàng */
+.quantity-cart {
+  font-size: 0.9rem;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.col-1 img {
+  width: 30px;
+  margin-right: 8px;
+}
+
+/* Style cho dropdown */
+.dropdown-toggle img {
+  width: 30px;
+  height: auto;
+  border-radius: 50%;
+  border: 2px solid #007bff;
+}
+
+.dropdown-menu {
+  padding: 10px;
+}
+
+.dropdown-item .btn-info {
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+/* Định dạng cho nút đăng nhập và đăng ký */
+.col-1 a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.col-1 a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+/* Bố cục tổng thể cho các lựa chọn */
+.mb-5 {
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  margin-bottom: 25px;
+}
+
+/* Style cho radio buttons */
+.form-check {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #007bff;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-right: 10px;
+  position: relative;
+  outline: none;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.form-check-input:checked {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.form-check-input:checked::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border-radius: 50%;
+}
+
+.form-check-label {
+  font-size: 15px;
+  color: #333;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.form-check-input:hover {
+  border-color: #0056b3;
+}
+
+.form-check-label:hover {
+  color: #0056b3;
+}
+
+/* Style cho dropdown */
+.select-order {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #333;
+  font-size: 14px;
+  font-weight: 500;
+  transition: border-color 0.3s ease;
+}
+
+.select-order:hover,
+.select-order:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Style cho danh sách category tabs */
+.nav-tabs {
+  border-bottom: 2px solid #007bff;
+}
+
+.nav-tabs .nav-item {
+  margin-right: 5px;
+}
+
+.nav-tabs .nav-link {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  padding: 8px 15px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.nav-tabs .nav-link.active {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+.nav-tabs .nav-link:hover {
+  background-color: #e9f3ff;
+  color: #0056b3;
+  border-color: #ddd;
+}
+
+
+.container {
+  margin-top: 60px;
+}
+
+.card-product {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  overflow: hidden;
+}
+
+.card-product:hover {
+  transform: scale(1.05);
+}
+
+.inner-thumbnail {
+  height: 200px;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inner-thumbnail img {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  /* Giữ nguyên tỉ lệ ảnh */
+}
+
+/* .card-body {
+  padding: 15px;
+  text-align: center;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+} */
+
+.price-old {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 1rem;
+}
+
+.discount .badge-danger {
+  background-color: #ff5e57;
+  color: white;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.price-new {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #ff5e57;
+}
+
+.btn-secondary {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+  font-weight: bold;
+  width: 100%;
+  border-radius: 0 0 10px 10px;
+}
+
+.btn-secondary:hover {
+  background-color: #0056b3;
+}
+.inner-order{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.inner-order button{
+  margin-left: 2px;
+}
+[button-cancel]{
+  width: 250px;
+  height: 40px;
 }

@@ -21,7 +21,7 @@
       </div>
       <div class="col-1">
         <a href="{%url 'detail-cart'%}">
-          <i class="fa-solid fa-cart-shopping"></i>
+          <img src="{% static 'client/images/icon-cart.png' %}" alt="Cart Icon" >
           {%if quantityProducts %}
           <span quantity-cart>({{quantityProducts}})</span>
           {%else%}
@@ -31,7 +31,7 @@
       </div>
       <div class="col-1">
         <a href="{%url 'detail-order'%}">
-          <i class="fa-solid fa-truck"></i>
+          <img src="{% static 'client/images/icon-truck.png' %}" alt="Cart Icon" >
           {%if quantityOrders%}
           ({{quantityOrders}})
           {%endif%}

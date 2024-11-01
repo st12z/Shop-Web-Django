@@ -149,7 +149,8 @@ if (buttonAddCart) {
 
 // Decrease Cart
 const buttonProcess = document.querySelectorAll("[button-process]");
-const tableCart = document.querySelector(".table-cart");
+const tableCart = document.querySelector("[table-cart]");
+console.log(tableCart);
 const totalPayment = document.querySelector("[total-payment]");
 
 if (buttonProcess) {
@@ -157,7 +158,6 @@ if (buttonProcess) {
     button.addEventListener("click", () => {
       const typeProcess = button.getAttribute("type-process");
       const productId = button.getAttribute("product-id");
-      const record = tableCart.querySelector(`tr[record='${productId}']`);
       const totalPrice = tableCart.querySelector(
         `[total-price='${productId}']`
       );
